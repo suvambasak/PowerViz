@@ -128,3 +128,6 @@ dmypy.json
 .vscode/
 # Pyre type checker
 .pyre/
+
+# exclude csv files
+*.csv
