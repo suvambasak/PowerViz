@@ -33,41 +33,47 @@ class Attributes:
     dew_point = 'dewPoint'
     precipitation_probability = 'precipProbability'
 
+    def build_labels(self):
+        return {
+            Attributes.day: 'day',
+            Attributes.time: 'minute',
+            Attributes.total_energy_consumption: 'Total energy use [kW]',
+            Attributes.total_energy_generated: 'Total energy generated [kW]',
+            Attributes.overall_house_energy_consumption: 'House overall consumption  [kW]',
+            Attributes.dishwasher: 'Dish washer [kW]',
+            Attributes.furnace_1: 'Furnace 1 [kW]',
+            Attributes.furnace_2: 'Furnace 2 [kW]',
+            Attributes.home_office: 'Home office [kW]',
+            Attributes.fridge: 'Fridge [kW]',
+            Attributes.wine_cellar: 'Wine cellar [kW]',
+            Attributes.garage_door: 'Garage door [kW]',
+            Attributes.kitchen_1: 'Kitchen 1 [kW]',
+            Attributes.kitchen_2: 'Kitchen 1 [kW]',
+            Attributes.kitchen_3: 'Kitchen 3 [kW]',
+            Attributes.barn: 'Barn [kW]',
+            Attributes.well: 'Well [kW]',
+            Attributes.microwave: 'Microwave [kW]',
+            Attributes.living_room: 'Living room [kW]',
+            Attributes.solar_power_generation: 'Solar [kW]',
+            Attributes.temperature: 'Temperature',
+            Attributes.overall_weather_condition: 'Overall weather condition',
+            Attributes.humidity: 'Humidity',
+            Attributes.visibility: 'Visibility',
+            Attributes.summarise_weather: 'Summary',
+            Attributes.apparent_temperature: 'Apparent temperature',
+            Attributes.pressure: 'Pressure',
+            Attributes.wind_speed: 'Wind speed',
+            Attributes.cloud_cover: 'Cloud cover',
+            Attributes.wind_bearing: 'Wind bearing',
+            Attributes.precipitation_intensity: 'Precipitation intensity',
+            Attributes.dew_point: 'Dew point',
+            Attributes.precipitation_probability: 'Precipitation Probability'
 
-def build_labels():
-    return {
-        Attributes.date: 'Date',
-        Attributes.time: 'Time',
-        Attributes.total_energy_consumption: 'Total energy use [kW]',
-        Attributes.total_energy_generated: 'Total energy generated [kW]',
-        Attributes.overall_house_energy_consumption: 'House overall consumption  [kW]',
-        Attributes.dishwasher: 'Dish washer [kW]',
-        Attributes.furnace_1: 'Furnace 1 [kW]',
-        Attributes.furnace_2: 'Furnace 2 [kW]',
-        Attributes.home_office: 'Home office [kW]',
-        Attributes.fridge: 'Fridge [kW]',
-        Attributes.wine_cellar: 'Wine cellar [kW]',
-        Attributes.garage_door: 'Garage door [kW]',
-        Attributes.kitchen_1: 'Kitchen 1 [kW]',
-        Attributes.kitchen_2: 'Kitchen 1 [kW]',
-        Attributes.kitchen_3: 'Kitchen 3 [kW]',
-        Attributes.barn: 'Barn [kW]',
-        Attributes.well: 'Well [kW]',
-        Attributes.microwave: 'Microwave [kW]',
-        Attributes.living_room: 'Living room [kW]',
-        Attributes.solar_power_generation: 'Solar [kW]',
-        Attributes.temperature: 'Temperature',
-        Attributes.overall_weather_condition: 'Overall weather condition',
-        Attributes.humidity: 'Humidity',
-        Attributes.visibility: 'Visibility',
-        Attributes.summarise_weather: 'Summary',
-        Attributes.apparent_temperature: 'Apparent temperature',
-        Attributes.pressure: 'Pressure',
-        Attributes.wind_speed: 'Wind speed',
-        Attributes.cloud_cover: 'Cloud cover',
-        Attributes.wind_bearing: 'Wind bearing',
-        Attributes.precipitation_intensity: 'Precipitation intensity',
-        Attributes.dew_point: 'Dew point',
-        Attributes.precipitation_probability: 'Precipitation Probability'
+        }
 
-    }
+    def get_attr_list(self):
+        labels = self.build_labels()
+        attr_list = []
+        for attr in labels.keys():
+            attr_list.append(labels[attr])
+        return attr_list
