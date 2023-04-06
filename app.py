@@ -94,6 +94,7 @@ app.layout = html.Div([
         ]
         ),
         dcc.Graph(id='overview-parallel-coordinates'),
+        dcc.Graph(id='overview-correlation-coordinates'),
 
     ], className='container'),
 
@@ -105,6 +106,8 @@ app.layout = html.Div([
 
 @app.callback(
     Output(component_id='overview-parallel-coordinates',
+           component_property='figure'),
+    Output(component_id='overview-correlation-coordinates',
            component_property='figure'),
     Input(component_id='start-day', component_property='value'),
     Input(component_id='end-day', component_property='value'),
@@ -122,7 +125,9 @@ def update_output_div(start_day, end_day, selected_dimensions):
         color_continuous_scale=px.colors.diverging.Tealrose,
         color_continuous_midpoint=2)
 
-    return fig
+    fig1 = px.imshow(dff[selected_dimensions].corr(), text_auto=True)
+
+    return [fig, fig1]
 
 
 if __name__ == '__main__':
