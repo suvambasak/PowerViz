@@ -5,7 +5,7 @@ from dataset.attributes import Attributes
 import pandas as pd
 import dash_bootstrap_components as dbc
 
-df = pd.read_csv('dataset/HomeDM.csv', low_memory=False)
+df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
 
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
@@ -54,7 +54,8 @@ app.layout = html.Div([
                 html.Label('Select dimensions'),
                 dcc.Dropdown([
                     Attributes.day,
-                    Attributes.time,
+                    Attributes.hour,
+                    Attributes.minute,
                     Attributes.total_energy_consumption,
                     Attributes.total_energy_generated,
                     Attributes.overall_house_energy_consumption,
@@ -86,7 +87,7 @@ app.layout = html.Div([
                     Attributes.precipitation_intensity,
                     Attributes.dew_point,
                     Attributes.precipitation_probability],
-                    [Attributes.day, Attributes.time],
+                    [Attributes.day, Attributes.hour],
                     multi=True,
                     id='overview-dimension-list'),
             ], className='form-group'),
@@ -116,7 +117,7 @@ def update_output_div(start_day, end_day, selected_dimensions):
 
     fig = px.parallel_coordinates(
         dff,
-        color=Attributes.time,
+        color=Attributes.minute,
         dimensions=selected_dimensions,
         color_continuous_scale=px.colors.diverging.Tealrose,
         color_continuous_midpoint=2)

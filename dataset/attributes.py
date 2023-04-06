@@ -1,6 +1,7 @@
 class Attributes:
     day = 'day'
-    time = 'minute'
+    hour = 'hour'
+    minute = 'minute'
     total_energy_consumption = 'use [kW]'
     total_energy_generated = 'gen [kW]'
     overall_house_energy_consumption = 'House overall [kW]'
@@ -36,7 +37,8 @@ class Attributes:
     def build_labels(self):
         return {
             Attributes.day: 'day',
-            Attributes.time: 'minute',
+            Attributes.hour: 'hour',
+            Attributes.minute: 'minute',
             Attributes.total_energy_consumption: 'Total energy use [kW]',
             Attributes.total_energy_generated: 'Total energy generated [kW]',
             Attributes.overall_house_energy_consumption: 'House overall consumption  [kW]',
