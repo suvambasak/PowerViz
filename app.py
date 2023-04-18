@@ -6,6 +6,8 @@ import pandas as pd
 import dash_bootstrap_components as dbc
 
 df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
+attr = Attributes()
+
 
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
@@ -20,7 +22,6 @@ app.layout = html.Div([
 
 
     html.Hr(),
-
 
 
     # Overview dataset
@@ -52,49 +53,30 @@ app.layout = html.Div([
             # Dimention
             html.Div([
                 html.Label('Select dimensions'),
-                dcc.Dropdown([
-                    Attributes.day,
-                    Attributes.hour,
-                    Attributes.minute,
-                    Attributes.total_energy_consumption,
-                    Attributes.total_energy_generated,
-                    Attributes.overall_house_energy_consumption,
-                    Attributes.dishwasher,
-                    Attributes.furnace_1,
-                    Attributes.furnace_2,
-                    Attributes.home_office,
-                    Attributes.fridge,
-                    Attributes.wine_cellar,
-                    Attributes.garage_door,
-                    Attributes.kitchen_1,
-                    Attributes.kitchen_2,
-                    Attributes.kitchen_3,
-                    Attributes.barn,
-                    Attributes.well,
-                    Attributes.microwave,
-                    Attributes.living_room,
-                    Attributes.solar_power_generation,
-                    Attributes.temperature,
-                    Attributes.overall_weather_condition,
-                    Attributes.humidity,
-                    Attributes.visibility,
-                    Attributes.summarise_weather,
-                    Attributes.apparent_temperature,
-                    Attributes.pressure,
-                    Attributes.wind_speed,
-                    Attributes.cloud_cover,
-                    Attributes.wind_bearing,
-                    Attributes.precipitation_intensity,
-                    Attributes.dew_point,
-                    Attributes.precipitation_probability],
-                    [Attributes.day, Attributes.hour],
-                    multi=True,
-                    id='overview-dimension-list'),
+                dcc.Dropdown(attr.get_attr_list(),
+                             [Attributes.day, Attributes.hour],
+                             multi=True,
+                             id='overview-dimension-list'),
             ], className='form-group'),
+
+            # Correlation dimention
+            html.Div([
+                html.Label('Correlation dimensions'),
+                dcc.Dropdown(
+                    id='correlation-dimension',
+                    options=attr.get_attr_list()
+                ),
+            ], className='form-group'),
+            html.Hr(),
         ]
         ),
-        dcc.Graph(id='overview-parallel-coordinates'),
-        dcc.Graph(id='overview-correlation-coordinates'),
+
+        html.Div([
+            html.H6(['Parallel coordinates view'], className='text-center'),
+            dcc.Graph(id='overview-parallel-coordinates'),
+            html.H6(['Correlation 2D view'], className='text-center'),
+            dcc.Graph(id='overview-correlation-coordinates'),
+        ]),
 
     ], className='container'),
 
@@ -112,22 +94,37 @@ app.layout = html.Div([
     Input(component_id='start-day', component_property='value'),
     Input(component_id='end-day', component_property='value'),
     Input(component_id='overview-dimension-list', component_property='value'),
+    Input(component_id='correlation-dimension', component_property='value'),
 )
-def update_output_div(start_day, end_day, selected_dimensions):
+def update_output_div(start_day, end_day, selected_dimensions, selected_correlation):
 
     dff = df[(df['day'] >= int(start_day)) &
              (df['day'] <= int(end_day))]
 
-    fig = px.parallel_coordinates(
+    if selected_correlation:
+        corr = dff.corrwith(dff[selected_correlation])
+        sorted_cols = corr.abs().sort_values(ascending=False).index
+
+        ordered_dimentions = []
+        for dim in sorted_cols:
+            if dim in selected_dimensions:
+                ordered_dimentions.append(dim)
+
+    else:
+        ordered_dimentions = selected_dimensions
+
+    parallel_coordinates_fig = px.parallel_coordinates(
         dff,
         color=Attributes.minute,
-        dimensions=selected_dimensions,
+        dimensions=ordered_dimentions,
         color_continuous_scale=px.colors.diverging.Tealrose,
-        color_continuous_midpoint=2)
+        color_continuous_midpoint=2
+    )
 
-    fig1 = px.imshow(dff[selected_dimensions].corr(), text_auto=True)
+    correlation_grid_fig = px.imshow(
+        dff[ordered_dimentions].corr(), text_auto=True)
 
-    return [fig, fig1]
+    return [parallel_coordinates_fig, correlation_grid_fig]
 
 
 if __name__ == '__main__':

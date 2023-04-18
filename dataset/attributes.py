@@ -74,8 +74,39 @@ class Attributes:
         }
 
     def get_attr_list(self):
-        labels = self.build_labels()
-        attr_list = []
-        for attr in labels.keys():
-            attr_list.append(labels[attr])
-        return attr_list
+        return [
+            Attributes.day,
+            Attributes.hour,
+            Attributes.minute,
+            Attributes.total_energy_consumption,
+            Attributes.total_energy_generated,
+            Attributes.overall_house_energy_consumption,
+            Attributes.dishwasher,
+            Attributes.furnace_1,
+            Attributes.furnace_2,
+            Attributes.home_office,
+            Attributes.fridge,
+            Attributes.wine_cellar,
+            Attributes.garage_door,
+            Attributes.kitchen_1,
+            Attributes.kitchen_2,
+            Attributes.kitchen_3,
+            Attributes.barn,
+            Attributes.well,
+            Attributes.microwave,
+            Attributes.living_room,
+            Attributes.solar_power_generation,
+            Attributes.temperature,
+            Attributes.overall_weather_condition,
+            Attributes.humidity,
+            Attributes.visibility,
+            Attributes.summarise_weather,
+            Attributes.apparent_temperature,
+            Attributes.pressure,
+            Attributes.wind_speed,
+            Attributes.cloud_cover,
+            Attributes.wind_bearing,
+            Attributes.precipitation_intensity,
+            Attributes.dew_point,
+            Attributes.precipitation_probability
+        ]
