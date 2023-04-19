@@ -14,8 +14,6 @@ data = data_in[data_in['day'] == day]
 
 data = data.sum()
 
-#print(data)
-
 # retrieve the data for the given day
 day_data = data
 
