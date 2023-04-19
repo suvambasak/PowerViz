@@ -5,6 +5,7 @@ from dataset.attributes import Attributes
 import pandas as pd
 import dash_bootstrap_components as dbc
 from reduction import t_sne_2d, t_sne_3d
+from bar import bar_plot
 
 df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
 attr = Attributes()
@@ -82,6 +83,40 @@ app.layout = html.Div([
     ], className='container'),
 
     html.Hr(),
+    # Bar and Pie side by side
+
+    html.Div([
+        html.H4('Power'),
+        html.Label('For day'),
+        dcc.Dropdown(
+            df['day'].unique(),
+            value='1',
+            id='power-day'
+        ),
+
+        html.Div([
+            # Gen vs Usage
+            html.Div([
+                html.Label('Generation and usage'),
+                dcc.Graph(id='bar-graph'),
+            ], style={'width': '48%', 'display': 'inline-block'}),
+
+            # Home appliances
+            html.Div([
+                html.Label('Consumption of home appliances'),
+                # dcc.Dropdown(
+                #     df['day'].unique(),
+                #     '1',
+                #     id='d-day'
+                # ),
+            ], style={'width': '48%', 'float': 'right', 'display': 'inline-block'}),
+        ], className='container'),
+
+
+
+    ], className='container'),
+
+    html.Hr(),
 
     # t-SNE
     html.Div([
@@ -90,12 +125,12 @@ app.layout = html.Div([
         # Perplexity
         html.Div([
             html.Label('Perplexity'),
-            dcc.Dropdown(
-                df['day'].unique(),
-                '1',
-                id='perplexity'
-            ),
+            dcc.Slider(0, 20, 5,
+                       value=10,
+                       id='perplexity-slider'
+                       ),
         ], style={'width': '48%', 'display': 'inline-block'}, className='form-group'),
+
 
         # Plot dim
         html.Div([
@@ -110,25 +145,37 @@ app.layout = html.Div([
 
 
         dcc.Graph(id='t-sne'),
-    ], className='container')
+    ], className='container'),
 
+
+    html.Hr(),
 
 ], className='container')
+
+
+@app.callback(
+    Output(component_id='bar-graph',
+           component_property='figure'),
+    Input(component_id='power-day', component_property='value'),
+)
+def update_dimensionality_reduction(day):
+    print('DAY:', day)
+    return bar_plot(day)
 
 
 @app.callback(
     Output(component_id='t-sne',
            component_property='figure'),
     Input(component_id='overview-dimension-list', component_property='value'),
+    Input(component_id='perplexity-slider', component_property='value'),
     Input(component_id='tsne-plot', component_property='value'),
 )
-def update_dimensionality_reduction(selected_dimensions, plot_dim):
-    print(plot_dim)
+def update_dimensionality_reduction(selected_dimensions, perplexity, plot_dim):
 
     if plot_dim == '2D':
-        return t_sne_2d(selected_dimensions, 0, 0)
+        return t_sne_2d(selected_dimensions, perplexity, 0)
     if plot_dim == '3D':
-        return t_sne_3d(selected_dimensions, 0, 0)
+        return t_sne_3d(selected_dimensions, perplexity, 0)
 
 
 @app.callback(
