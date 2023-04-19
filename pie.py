@@ -26,7 +26,7 @@ values = [day_data[label] for label in labels]
 data = go.Pie(labels=labels, values=values)
 
 # specify the layout of the pie chart
-layout = go.Layout(title=f'Pie Chart for Day {day}')
+layout = go.Layout(title=f'Distribution of various Electricity usages for Day {day}')
 
 # create the figure with the pie chart data and layout
 fig = go.Figure(data=[data], layout=layout)
