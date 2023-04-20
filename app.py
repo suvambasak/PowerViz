@@ -20,16 +20,18 @@ app.layout = html.Div([
     html.Div(
         [
             html.H1('PowerViz')
-        ], className='text-center'
+        ], className='text-center', style={'backgroundColor': 'black', 'color': 'white', 'padding': '10px', 'width': '100%', 'margin': '0'}
     ),
-
-
-    html.Hr(),
+    html.Br(),
 
 
     # Overview dataset
     html.Div([
-        html.H4('Dataset Overview'),
+        html.Link(
+            rel='stylesheet',
+            href='/assets/style.css'
+        ),
+        html.H4('Dataset Overview', className='text-center'),
 
         # Inputs
         html.Div([
@@ -62,6 +64,8 @@ app.layout = html.Div([
                              id='overview-dimension-list'),
             ], className='form-group'),
 
+            html.Hr(),
+
             # Correlation dimention
             html.Div([
                 html.Label('Correlation dimensions'),
@@ -77,6 +81,7 @@ app.layout = html.Div([
         html.Div([
             html.H6(['Parallel coordinates view'], className='text-center'),
             dcc.Graph(id='overview-parallel-coordinates'),
+            html.Hr(),
             html.H6(['Correlation 2D view'], className='text-center'),
             dcc.Graph(id='overview-correlation-coordinates'),
         ]),
@@ -87,7 +92,8 @@ app.layout = html.Div([
     # Bar and Pie side by side
 
     html.Div([
-        html.H4('Power'),
+        html.H4('Power and usage', className='text-center'),
+        html.Br(),
 
         html.Div([
             # Gen vs Usage
@@ -98,6 +104,7 @@ app.layout = html.Div([
                     value=1,
                     id='power-day'
                 ),
+                html.Hr(),
                 dcc.Graph(id='bar-graph'),
             ], style={'width': '48%', 'display': 'inline-block'}),
 
@@ -108,6 +115,8 @@ app.layout = html.Div([
                              [Attributes.home_office, Attributes.living_room],
                              multi=True,
                              id='appliances-pie-list'),
+
+                html.Hr(),
                 dcc.Graph(id='pie-graph'),
             ], style={'width': '48%', 'float': 'right', 'display': 'inline-block'}),
         ], className='container'),
@@ -119,7 +128,8 @@ app.layout = html.Div([
 
     # t-SNE
     html.Div([
-        html.H4('Dimensionality reduction'),
+        html.H4('Dimensionality reduction', className='text-center'),
+        html.Br(),
         html.Div([
             html.Div([
                 html.Div([
@@ -134,7 +144,7 @@ app.layout = html.Div([
                     html.Label('Plot'),
                     dcc.RadioItems(
                         ['2D', '3D'],
-                        '2D',
+                        '3D',
                         id='tsne-plot',
                         inline=True
                     ),
@@ -149,6 +159,7 @@ app.layout = html.Div([
             ], className='row')
 
         ], className='container'),
+        html.Hr(),
 
         dcc.Graph(id='t-sne'),
     ], className='container'),
@@ -156,7 +167,7 @@ app.layout = html.Div([
 
     html.Hr(),
 
-], className='container')
+])
 
 
 @app.callback(
