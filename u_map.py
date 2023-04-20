@@ -1,25 +1,18 @@
-import plotly.express as px
 import pandas as pd
-
-from sklearn.preprocessing import StandardScaler
 from dataset.attributes import Attributes
-
-from sklearn.decomposition import PCA
+from umap import UMAP
+import plotly.express as px
 
 
 attr = Attributes()
 
 
-def pca_weather_plot(percentage, dim):
-
+def umap_weather_plot(percentage, dim):
     df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
     df = df.sample(df.shape[0]*percentage//100)
 
     # Weather
     dff = df[attr.get_weather_attributes()]
-    scaler = StandardScaler()
-    scaler.fit(dff)
-    scaled_data = scaler.transform(dff)
 
     def get_hover_data():
         return [
@@ -33,50 +26,48 @@ def pca_weather_plot(percentage, dim):
         ]
 
     if dim == '2D':
-        pca = PCA(n_components=2)
-        pca.fit(scaled_data)
-        x_pca = pca.transform(scaled_data)
+        umap = UMAP(n_components=2, init='random', random_state=0)
+        proj = umap.fit_transform(dff)
 
         fig = px.scatter(
             df,
-            x=x_pca[:, 0],
-            y=x_pca[:, 1],
+            x=proj[:, 0],
+            y=proj[:, 1],
             color=Attributes.temperature,
-            title="Principal Component Analysis",
+            title="Uniform Manifold Approximation and Projection",
             hover_data=get_hover_data()
         )
         fig.update_layout(
-            xaxis_title="Principle component 1",
-            yaxis_title="Principle component 2"
+            xaxis_title="Dimension 1",
+            yaxis_title="Dimension 2"
         )
 
     elif dim == '3D':
-        pca = PCA(n_components=3)
-        pca.fit(scaled_data)
-        x_pca = pca.transform(scaled_data)
+        umap = UMAP(n_components=3, init='random', random_state=0)
+        proj = umap.fit_transform(dff)
 
         fig = px.scatter_3d(
             df,
-            x=x_pca[:, 0],
-            y=x_pca[:, 1],
-            z=x_pca[:, 2],
+            x=proj[:, 0],
+            y=proj[:, 1],
+            z=proj[:, 2],
             color=Attributes.temperature,
-            title="Principal Component Analysis",
+            title="Uniform Manifold Approximation and Projection",
             hover_data=get_hover_data()
         )
 
         fig.update_layout(
             scene=dict(
-                xaxis_title="Principle component 1",
-                yaxis_title="Principle component 2",
-                zaxis_title="Principle component 3"
+                xaxis_title="Dimension 1",
+                yaxis_title="Dimension 2",
+                zaxis_title="Dimension 3"
             )
         )
 
     return fig
 
 
-def pca_electric_plot(percentage, dim):
+def umap_electric_plot(percentage, dim):
     df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
     df = df.sample(df.shape[0]*percentage//100)
 
@@ -100,62 +91,53 @@ def pca_electric_plot(percentage, dim):
             Attributes.barn
         ]
 
-    scaler = StandardScaler()
-    scaler.fit(dff)
-    scaled_data = scaler.transform(dff)
-
     if dim == '2D':
-        pca = PCA(n_components=2)
-        pca.fit(scaled_data)
-        x_pca = pca.transform(scaled_data)
+        umap = UMAP(n_components=2, init='random', random_state=0)
+        proj = umap.fit_transform(dff)
 
         fig = px.scatter(
             df,
-            x=x_pca[:, 0],
-            y=x_pca[:, 1],
+            x=proj[:, 0],
+            y=proj[:, 1],
             color=Attributes.total_energy_consumption,
-            title="Principal Component Analysis",
+            title="Uniform Manifold Approximation and Projection",
             hover_data=get_hover_data()
         )
         fig.update_layout(
-            xaxis_title="Principle component 1",
-            yaxis_title="Principle component 2"
+            xaxis_title="Dimension 1",
+            yaxis_title="Dimension 2"
         )
 
-    elif dim == '3D':
-        pca = PCA(n_components=3)
-        pca.fit(scaled_data)
-        x_pca = pca.transform(scaled_data)
+    if dim == '3D':
+        umap = UMAP(n_components=3, init='random', random_state=0)
+        proj = umap.fit_transform(dff)
 
         fig = px.scatter_3d(
             df,
-            x=x_pca[:, 0],
-            y=x_pca[:, 1],
-            z=x_pca[:, 2],
+            x=proj[:, 0],
+            y=proj[:, 1],
+            z=proj[:, 2],
             color=Attributes.total_energy_consumption,
-            title="Principal Component Analysis",
+            title="Uniform Manifold Approximation and Projection",
             hover_data=get_hover_data()
         )
         fig.update_layout(
             scene=dict(
-                xaxis_title="Principle component 1",
-                yaxis_title="Principle component 2",
-                zaxis_title="Principle component 3"
+                xaxis_title="Dimension 1",
+                yaxis_title="Dimension 2",
+                zaxis_title="Dimension 3"
             )
         )
 
     return fig
 
 
-def pca_all_plot(percentage, dim):
+def umap_all_plot(percentage, dim):
     df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
     df = df.sample(df.shape[0]*percentage//100)
 
     # All
     dff = df[attr.all_attributes()]
-    scaler = StandardScaler()
-    scaler.fit(dff)
-    scaled_data = scaler.transform(dff)
 
     def get_hover_data():
         return [
@@ -168,42 +150,40 @@ def pca_all_plot(percentage, dim):
         ]
 
     if dim == '2D':
-        pca = PCA(n_components=2)
-        pca.fit(scaled_data)
-        x_pca = pca.transform(scaled_data)
+        umap = UMAP(n_components=2, init='random', random_state=0)
+        proj = umap.fit_transform(dff)
 
         fig = px.scatter(
             df,
-            x=x_pca[:, 0],
-            y=x_pca[:, 1],
+            x=proj[:, 0],
+            y=proj[:, 1],
             color=Attributes.temperature,
-            title="Principal component analysis",
+            title="Uniform Manifold Approximation and Projection",
             hover_data=get_hover_data()
         )
         fig.update_layout(
-            xaxis_title="Principle component 1",
-            yaxis_title="Principle component 2"
+            xaxis_title="Dimension 1",
+            yaxis_title="Dimension 2"
         )
 
-    elif dim == '3D':
-        pca = PCA(n_components=3)
-        pca.fit(scaled_data)
-        x_pca = pca.transform(scaled_data)
+    if dim == '3D':
+        umap = UMAP(n_components=3, init='random', random_state=0)
+        proj = umap.fit_transform(dff)
 
         fig = px.scatter_3d(
             df,
-            x=x_pca[:, 0],
-            y=x_pca[:, 1],
-            z=x_pca[:, 2],
+            x=proj[:, 0],
+            y=proj[:, 1],
+            z=proj[:, 2],
             color=Attributes.total_energy_consumption,
-            title="Principal component analysis",
+            title="Uniform Manifold Approximation and Projection",
             hover_data=get_hover_data()
         )
         fig.update_layout(
             scene=dict(
-                xaxis_title="Principle component 1",
-                yaxis_title="Principle component 2",
-                zaxis_title="Principle component 3"
+                xaxis_title="Dimension 1",
+                yaxis_title="Dimension 2",
+                zaxis_title="Dimension 3"
             )
         )
 

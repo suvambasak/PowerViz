@@ -8,6 +8,7 @@ from reduction import t_sne_2d, t_sne_3d
 from bar import bar_plot
 from pie import pie_chart
 from pca import pca_weather_plot, pca_electric_plot, pca_all_plot
+from u_map import umap_all_plot, umap_electric_plot, umap_weather_plot
 
 df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
 attr = Attributes()
@@ -21,7 +22,7 @@ app.layout = html.Div([
     html.Div(
         [
             html.H1('PowerViz')
-        ], className='text-center', style={'backgroundColor': 'black', 'color': 'white', 'padding': '10px', 'width': '100%', 'margin': '0'}
+        ], className='text-center', style={'backgroundColor': 'black', 'color': 'white', 'padding': '7px', 'width': '100%', 'margin': '0'}
     ),
     html.Br(),
 
@@ -142,6 +143,14 @@ app.layout = html.Div([
 
                 ], className='col-6'),
                 html.Div([
+                    html.Label('Method'),
+                    dcc.RadioItems(
+                        ['PCA', 'UMAP'],
+                        'PCA',
+                        id='dim-method',
+                    ),
+                ], className='col'),
+                html.Div([
                     html.Label('Plot type'),
                     dcc.RadioItems(
                         ['2D', '3D'],
@@ -161,7 +170,7 @@ app.layout = html.Div([
                 html.Div([
                     html.Label(''),
                     html.Button(id='t-sne-button', n_clicks=0,
-                                children='Update', className='btn btn-success'),
+                                children='Reduce', className='btn btn-primary'),
                 ], className='col'),
 
 
@@ -206,20 +215,32 @@ def update_bar_chart(day):
     State(component_id='sample-slider', component_property='value'),
     State(component_id='tsne-plot', component_property='value'),
     State(component_id='tsne-plot-with', component_property='value'),
+    State(component_id='dim-method', component_property='value'),
 )
-def update_dimensionality_reduction(clicks, sample, plot_dim, plot_with):
+def update_dimensionality_reduction(clicks, sample, plot_dim, plot_with, method):
     print('update_dimensionality_reduction',
-          clicks, sample, plot_dim, plot_with)
+          clicks, sample, plot_dim, plot_with, method)
 
     if sample <= 0:
         sample = 1
 
     if plot_with == 'Weather':
-        return pca_weather_plot(sample, plot_dim)
+        if method == 'PCA':
+            return pca_weather_plot(sample, plot_dim)
+        elif method == 'UMAP':
+            return umap_weather_plot(sample, plot_dim)
+
     if plot_with == 'Power usage':
-        return pca_electric_plot(sample, plot_dim)
+        if method == 'PCA':
+            return pca_electric_plot(sample, plot_dim)
+        elif method == 'UMAP':
+            return umap_electric_plot(sample, plot_dim)
+
     if plot_with == 'All':
-        return pca_all_plot(sample, plot_dim)
+        if method == 'PCA':
+            return pca_all_plot(sample, plot_dim)
+        elif method == 'UMAP':
+            return umap_all_plot(sample, plot_dim)
 
 
 @app.callback(
