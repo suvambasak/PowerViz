@@ -1,4 +1,4 @@
-from dash import Dash, dcc, html, Input, Output
+from dash import Dash, dcc, html, Input, Output, State
 import plotly.express as px
 import plotly.graph_objects as go
 from dataset.attributes import Attributes
@@ -120,28 +120,35 @@ app.layout = html.Div([
     # t-SNE
     html.Div([
         html.H4('Dimensionality reduction'),
-
-        # Perplexity
         html.Div([
-            html.Label('Perplexity'),
-            dcc.Slider(0, 20, 5,
-                       value=10,
-                       id='perplexity-slider'
-                       ),
-        ], style={'width': '48%', 'display': 'inline-block'}, className='form-group'),
+            html.Div([
+                html.Div([
+                    html.Label('Perplexity'),
+                    dcc.Slider(0, 20, 5,
+                               value=10,
+                               id='perplexity-slider'
+                               ),
+
+                ], className='col-6'),
+                html.Div([
+                    html.Label('Plot'),
+                    dcc.RadioItems(
+                        ['2D', '3D'],
+                        '2D',
+                        id='tsne-plot',
+                        inline=True
+                    ),
+                ], className='col'),
+                html.Div([
+                    html.Label(''),
+                    html.Button(id='t-sne-button', n_clicks=0,
+                                children='Update', className='btn btn-success'),
+                ], className='col'),
 
 
-        # Plot dim
-        html.Div([
-            html.Label('Plot'),
-            dcc.RadioItems(
-                ['2D', '3D'],
-                '2D',
-                id='tsne-plot',
-                inline=True
-            ),
-        ], style={'width': '48%', 'float': 'right', 'display': 'inline-block'}, className='form-group'),
+            ], className='row')
 
+        ], className='container'),
 
         dcc.Graph(id='t-sne'),
     ], className='container'),
@@ -175,11 +182,12 @@ def update_bar_chart(day):
 @app.callback(
     Output(component_id='t-sne',
            component_property='figure'),
-    Input(component_id='overview-dimension-list', component_property='value'),
-    Input(component_id='perplexity-slider', component_property='value'),
-    Input(component_id='tsne-plot', component_property='value'),
+    Input('t-sne-button', 'n_clicks'),
+    State(component_id='overview-dimension-list', component_property='value'),
+    State(component_id='perplexity-slider', component_property='value'),
+    State(component_id='tsne-plot', component_property='value'),
 )
-def update_dimensionality_reduction(selected_dimensions, perplexity, plot_dim):
+def update_dimensionality_reduction(clicks, selected_dimensions, perplexity, plot_dim):
 
     if plot_dim == '2D':
         return t_sne_2d(selected_dimensions, perplexity, 0)
@@ -197,7 +205,7 @@ def update_dimensionality_reduction(selected_dimensions, perplexity, plot_dim):
     Input(component_id='overview-dimension-list', component_property='value'),
     Input(component_id='correlation-dimension', component_property='value'),
 )
-def update_output_div(start_day, end_day, selected_dimensions, selected_correlation):
+def parallel_correlation(start_day, end_day, selected_dimensions, selected_correlation):
 
     dff = df[(df['day'] >= int(start_day)) &
              (df['day'] <= int(end_day))]
