@@ -46,7 +46,7 @@ def bar_plot(day):
 #     updatemenu[0]['showactive']=True
 
     fig.update_layout(
-        # title="Power Usage and Generation",
+        title=f"Generation and usage on day {day}",
         xaxis_title="Hour Bin",
         yaxis_title="Power [kW]",
         # updatemenus=updatemenu

@@ -6,6 +6,7 @@ import pandas as pd
 import dash_bootstrap_components as dbc
 from reduction import t_sne_2d, t_sne_3d
 from bar import bar_plot
+from pie import pie_chart
 
 df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
 attr = Attributes()
@@ -87,31 +88,29 @@ app.layout = html.Div([
 
     html.Div([
         html.H4('Power'),
-        html.Label('For day'),
-        dcc.Dropdown(
-            df['day'].unique(),
-            value='1',
-            id='power-day'
-        ),
 
         html.Div([
             # Gen vs Usage
             html.Div([
-                html.Label('Generation and usage'),
+                html.Label('For day'),
+                dcc.Dropdown(
+                    df['day'].unique(),
+                    value=1,
+                    id='power-day'
+                ),
                 dcc.Graph(id='bar-graph'),
             ], style={'width': '48%', 'display': 'inline-block'}),
 
             # Home appliances
             html.Div([
-                html.Label('Consumption of home appliances'),
-                # dcc.Dropdown(
-                #     df['day'].unique(),
-                #     '1',
-                #     id='d-day'
-                # ),
+                html.Label('Select appliances'),
+                dcc.Dropdown(attr.get_appliance_list(),
+                             [Attributes.home_office, Attributes.living_room],
+                             multi=True,
+                             id='appliances-pie-list'),
+                dcc.Graph(id='pie-graph'),
             ], style={'width': '48%', 'float': 'right', 'display': 'inline-block'}),
         ], className='container'),
-
 
 
     ], className='container'),
@@ -154,11 +153,21 @@ app.layout = html.Div([
 
 
 @app.callback(
+    Output(component_id='pie-graph',
+           component_property='figure'),
+    Input(component_id='power-day', component_property='value'),
+    Input(component_id='appliances-pie-list', component_property='value'),
+)
+def update_pie_chart(day, appliances):
+    return pie_chart(day, appliances)
+
+
+@app.callback(
     Output(component_id='bar-graph',
            component_property='figure'),
     Input(component_id='power-day', component_property='value'),
 )
-def update_dimensionality_reduction(day):
+def update_bar_chart(day):
     print('DAY:', day)
     return bar_plot(day)
 

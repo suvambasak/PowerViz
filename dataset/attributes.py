@@ -73,6 +73,24 @@ class Attributes:
 
         }
 
+    def get_appliance_list(self):
+        return [
+            Attributes.dishwasher,
+            Attributes.furnace_1,
+            Attributes.furnace_2,
+            Attributes.home_office,
+            Attributes.fridge,
+            Attributes.wine_cellar,
+            Attributes.garage_door,
+            Attributes.kitchen_1,
+            Attributes.kitchen_2,
+            Attributes.kitchen_3,
+            Attributes.barn,
+            Attributes.well,
+            Attributes.microwave,
+            Attributes.living_room
+        ]
+
     def get_attr_list(self):
         return [
             Attributes.day,
