@@ -177,7 +177,7 @@ def pca_all_plot(percentage, dim):
             x=x_pca[:, 0],
             y=x_pca[:, 1],
             color=Attributes.temperature,
-            title="Principal component analysis",
+            title="Principal Component Analysis",
             hover_data=get_hover_data()
         )
         fig.update_layout(
@@ -196,7 +196,7 @@ def pca_all_plot(percentage, dim):
             y=x_pca[:, 1],
             z=x_pca[:, 2],
             color=Attributes.total_energy_consumption,
-            title="Principal component analysis",
+            title="Principal Component Analysis",
             hover_data=get_hover_data()
         )
         fig.update_layout(

@@ -1,13 +1,14 @@
-from dash import Dash, dcc, html, Input, Output, State
+import dash_bootstrap_components as dbc
+import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from dataset.attributes import Attributes
-import pandas as pd
-import dash_bootstrap_components as dbc
-from reduction import t_sne_2d, t_sne_3d
+from dash import Dash, Input, Output, State, dcc, html
+
 from bar import bar_plot
+from dataset.attributes import Attributes
+from pca import pca_all_plot, pca_electric_plot, pca_weather_plot
 from pie import pie_chart
-from pca import pca_weather_plot, pca_electric_plot, pca_all_plot
+from reduction import t_sne_2d, t_sne_3d
 from u_map import umap_all_plot, umap_electric_plot, umap_weather_plot
 
 df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
@@ -60,7 +61,7 @@ app.layout = html.Div([
             # Dimention
             html.Div([
                 html.Label('Select dimensions'),
-                dcc.Dropdown(attr.get_attr_list(),
+                dcc.Dropdown(attr.get_numeric_attributes(),
                              [Attributes.day, Attributes.hour],
                              multi=True,
                              id='overview-dimension-list'),
@@ -73,7 +74,7 @@ app.layout = html.Div([
                 html.Label('Correlation dimensions'),
                 dcc.Dropdown(
                     id='correlation-dimension',
-                    options=attr.get_attr_list()
+                    options=attr.get_numeric_attributes()
                 ),
             ], className='form-group'),
             html.Hr(),
@@ -145,7 +146,7 @@ app.layout = html.Div([
                 html.Div([
                     html.Label('Method'),
                     dcc.RadioItems(
-                        ['PCA', 'UMAP'],
+                        ['PCA', 'UMAP', 't-SNE'],
                         'PCA',
                         id='dim-method',
                     ),
@@ -257,6 +258,7 @@ def parallel_correlation(start_day, end_day, selected_dimensions, selected_corre
 
     dff = df[(df['day'] >= int(start_day)) &
              (df['day'] <= int(end_day))]
+    dff = dff.drop(['icon', 'summary', 'cloudCover'], axis=1)
 
     if selected_correlation:
         corr = dff.corrwith(dff[selected_correlation])
