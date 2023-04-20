@@ -1,11 +1,10 @@
 import pandas as pd
 import plotly.graph_objs as go
-import plotly.offline as pyo
 
 
 def pie_chart(day, labels):
     # read the data from the CSV file
-    data_in = pd.read_csv('dataset/HomeDHM.csv')
+    data_in = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
 
     # # prompt the user to enter a day and the labels to include in the pie chart
     # day = int(input("Enter a day (between 1 and 350): "))

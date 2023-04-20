@@ -1,4 +1,5 @@
 class Attributes:
+    id = 'ID'
     day = 'day'
     hour = 'hour'
     minute = 'minute'
@@ -73,7 +74,10 @@ class Attributes:
 
         }
 
-    def get_appliance_list(self):
+    def all_attributes(self):
+        return self.get_weather_attributes()+self.get_appliance_attributes()
+
+    def get_appliance_attributes(self):
         return [
             Attributes.dishwasher,
             Attributes.furnace_1,
@@ -89,6 +93,23 @@ class Attributes:
             Attributes.well,
             Attributes.microwave,
             Attributes.living_room
+        ]
+
+    def get_weather_attributes(self):
+        return [
+            Attributes.temperature,
+            # Attributes.overall_weather_condition,
+            Attributes.humidity,
+            Attributes.visibility,
+            # Attributes.summarise_weather,
+            Attributes.apparent_temperature,
+            Attributes.pressure,
+            # Attributes.cloud_cover,
+            Attributes.wind_bearing,
+            Attributes.precipitation_intensity,
+            Attributes.dew_point,
+            Attributes.precipitation_probability
+
         ]
 
     def get_attr_list(self):
