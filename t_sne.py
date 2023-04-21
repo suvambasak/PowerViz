@@ -13,6 +13,7 @@ def t_sne_weather_plot(percentage, dim, perplexity=30):
 
     # Weather
     dff = df[attr.get_weather_attributes()]
+    data_size = dff.shape[0]
 
     def get_hover_data():
         return [
@@ -34,7 +35,7 @@ def t_sne_weather_plot(percentage, dim, perplexity=30):
             x=proj[:, 0],
             y=proj[:, 1],
             color=Attributes.temperature,
-            title="t-Distributed Stochastic Neighbor Embedding",
+            title=f"t-Distributed Stochastic Neighbor Embedding | Size {data_size} | Perplexity {perplexity}",
             hover_data=get_hover_data()
         )
         fig.update_layout(
@@ -52,7 +53,7 @@ def t_sne_weather_plot(percentage, dim, perplexity=30):
             y=proj[:, 1],
             z=proj[:, 2],
             color=Attributes.temperature,
-            title="t-Distributed Stochastic Neighbor Embedding",
+            title=f"t-Distributed Stochastic Neighbor Embedding | Size {data_size} | Perplexity {perplexity}",
             hover_data=get_hover_data()
         )
 
@@ -73,6 +74,7 @@ def t_sne_electric_plot(percentage, dim, perplexity=30):
 
     # Appliance
     dff = df[attr.get_appliance_attributes()]
+    data_size = dff.shape[0]
 
     def get_hover_data():
         return [
@@ -100,7 +102,7 @@ def t_sne_electric_plot(percentage, dim, perplexity=30):
             x=proj[:, 0],
             y=proj[:, 1],
             color=Attributes.total_energy_consumption,
-            title="t-Distributed Stochastic Neighbor Embedding",
+            title=f"t-Distributed Stochastic Neighbor Embedding | Size {data_size} | Perplexity {perplexity}",
             hover_data=get_hover_data()
         )
         fig.update_layout(
@@ -118,7 +120,7 @@ def t_sne_electric_plot(percentage, dim, perplexity=30):
             y=proj[:, 1],
             z=proj[:, 2],
             color=Attributes.total_energy_consumption,
-            title="t-Distributed Stochastic Neighbor Embedding",
+            title=f"t-Distributed Stochastic Neighbor Embedding | Size {data_size} | Perplexity {perplexity}",
             hover_data=get_hover_data()
         )
         fig.update_layout(
@@ -138,6 +140,7 @@ def t_sne_all_plot(percentage, dim, perplexity=30):
 
     # All
     dff = df[attr.all_attributes()]
+    data_size = dff.shape[0]
 
     def get_hover_data():
         return [
@@ -158,7 +161,7 @@ def t_sne_all_plot(percentage, dim, perplexity=30):
             x=proj[:, 0],
             y=proj[:, 1],
             color=Attributes.temperature,
-            title="t-Distributed Stochastic Neighbor Embedding",
+            title=f"t-Distributed Stochastic Neighbor Embedding | Size {data_size} | Perplexity {perplexity}",
             hover_data=get_hover_data()
         )
         fig.update_layout(
@@ -176,7 +179,7 @@ def t_sne_all_plot(percentage, dim, perplexity=30):
             y=proj[:, 1],
             z=proj[:, 2],
             color=Attributes.total_energy_consumption,
-            title="t-Distributed Stochastic Neighbor Embedding",
+            title=f"t-Distributed Stochastic Neighbor Embedding | Size {data_size} | Perplexity {perplexity}",
             hover_data=get_hover_data()
         )
         fig.update_layout(

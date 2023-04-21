@@ -17,6 +17,8 @@ def pca_weather_plot(percentage, dim):
 
     # Weather
     dff = df[attr.get_weather_attributes()]
+    data_size = dff.shape[0]
+
     scaler = StandardScaler()
     scaler.fit(dff)
     scaled_data = scaler.transform(dff)
@@ -42,7 +44,7 @@ def pca_weather_plot(percentage, dim):
             x=x_pca[:, 0],
             y=x_pca[:, 1],
             color=Attributes.temperature,
-            title="Principal Component Analysis",
+            title=f"Principal Component Analysis | Size {data_size}",
             hover_data=get_hover_data()
         )
         fig.update_layout(
@@ -61,7 +63,7 @@ def pca_weather_plot(percentage, dim):
             y=x_pca[:, 1],
             z=x_pca[:, 2],
             color=Attributes.temperature,
-            title="Principal Component Analysis",
+            title=f"Principal Component Analysis | Size {data_size}",
             hover_data=get_hover_data()
         )
 
@@ -82,6 +84,7 @@ def pca_electric_plot(percentage, dim):
 
     # Appliance
     dff = df[attr.get_appliance_attributes()]
+    data_size = dff.shape[0]
 
     def get_hover_data():
         return [
@@ -114,7 +117,7 @@ def pca_electric_plot(percentage, dim):
             x=x_pca[:, 0],
             y=x_pca[:, 1],
             color=Attributes.total_energy_consumption,
-            title="Principal Component Analysis",
+            title=f"Principal Component Analysis | Size {data_size}",
             hover_data=get_hover_data()
         )
         fig.update_layout(
@@ -133,7 +136,7 @@ def pca_electric_plot(percentage, dim):
             y=x_pca[:, 1],
             z=x_pca[:, 2],
             color=Attributes.total_energy_consumption,
-            title="Principal Component Analysis",
+            title=f"Principal Component Analysis | Size {data_size}",
             hover_data=get_hover_data()
         )
         fig.update_layout(
@@ -153,6 +156,8 @@ def pca_all_plot(percentage, dim):
 
     # All
     dff = df[attr.all_attributes()]
+    data_size = dff.shape[0]
+
     scaler = StandardScaler()
     scaler.fit(dff)
     scaled_data = scaler.transform(dff)
@@ -177,7 +182,7 @@ def pca_all_plot(percentage, dim):
             x=x_pca[:, 0],
             y=x_pca[:, 1],
             color=Attributes.temperature,
-            title="Principal Component Analysis",
+            title=f"Principal Component Analysis | Size {data_size}",
             hover_data=get_hover_data()
         )
         fig.update_layout(
@@ -196,7 +201,7 @@ def pca_all_plot(percentage, dim):
             y=x_pca[:, 1],
             z=x_pca[:, 2],
             color=Attributes.total_energy_consumption,
-            title="Principal Component Analysis",
+            title=f"Principal Component Analysis | Size {data_size}",
             hover_data=get_hover_data()
         )
         fig.update_layout(

@@ -5,12 +5,11 @@ from dash import Dash, Input, Output, State, dcc, html
 
 from bar import bar_plot
 from dataset.attributes import Attributes
+from dataset.sampling import sample_points
 from pca import pca_all_plot, pca_electric_plot, pca_weather_plot
 from pie import pie_chart
-from u_map import umap_all_plot, umap_electric_plot, umap_weather_plot
 from t_sne import t_sne_all_plot, t_sne_electric_plot, t_sne_weather_plot
-
-from dataset.sampling import sample_points
+from u_map import umap_all_plot, umap_electric_plot, umap_weather_plot
 
 df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
 attr = Attributes()
