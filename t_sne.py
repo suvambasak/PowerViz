@@ -1,4 +1,4 @@
-import pandas as pd
+from dataset.sampling import sample
 from dataset.attributes import Attributes
 from sklearn.manifold import TSNE
 import plotly.express as px
@@ -8,8 +8,7 @@ attr = Attributes()
 
 
 def t_sne_weather_plot(percentage, dim, perplexity=30):
-    df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
-    df = df.sample(df.shape[0]*percentage//100)
+    df = sample(percentage)
 
     # Weather
     dff = df[attr.get_weather_attributes()]
@@ -69,8 +68,7 @@ def t_sne_weather_plot(percentage, dim, perplexity=30):
 
 
 def t_sne_electric_plot(percentage, dim, perplexity=30):
-    df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
-    df = df.sample(df.shape[0]*percentage//100)
+    df = sample(percentage)
 
     # Appliance
     dff = df[attr.get_appliance_attributes()]
@@ -135,8 +133,7 @@ def t_sne_electric_plot(percentage, dim, perplexity=30):
 
 
 def t_sne_all_plot(percentage, dim, perplexity=30):
-    df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
-    df = df.sample(df.shape[0]*percentage//100)
+    df = sample(percentage)
 
     # All
     dff = df[attr.all_attributes()]

@@ -1,4 +1,4 @@
-import pandas as pd
+from dataset.sampling import sample
 from dataset.attributes import Attributes
 from umap import UMAP
 import plotly.express as px
@@ -8,8 +8,7 @@ attr = Attributes()
 
 
 def umap_weather_plot(percentage, dim, n_neighbors=15):
-    df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
-    df = df.sample(df.shape[0]*percentage//100)
+    df = sample(percentage)
 
     # Weather
     dff = df[attr.get_weather_attributes()]
@@ -71,8 +70,7 @@ def umap_weather_plot(percentage, dim, n_neighbors=15):
 
 
 def umap_electric_plot(percentage, dim, n_neighbors=15):
-    df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
-    df = df.sample(df.shape[0]*percentage//100)
+    df = sample(percentage)
 
     # Appliance
     dff = df[attr.get_appliance_attributes()]
@@ -139,8 +137,7 @@ def umap_electric_plot(percentage, dim, n_neighbors=15):
 
 
 def umap_all_plot(percentage, dim, n_neighbors=15):
-    df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
-    df = df.sample(df.shape[0]*percentage//100)
+    df = sample(percentage)
 
     # All
     dff = df[attr.all_attributes()]

@@ -1,19 +1,15 @@
 import plotly.express as px
-import pandas as pd
-
-from sklearn.preprocessing import StandardScaler
-from dataset.attributes import Attributes
-
 from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
 
+from dataset.attributes import Attributes
+from dataset.sampling import sample
 
 attr = Attributes()
 
 
 def pca_weather_plot(percentage, dim):
-
-    df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
-    df = df.sample(df.shape[0]*percentage//100)
+    df = sample(percentage)
 
     # Weather
     dff = df[attr.get_weather_attributes()]
@@ -79,8 +75,7 @@ def pca_weather_plot(percentage, dim):
 
 
 def pca_electric_plot(percentage, dim):
-    df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
-    df = df.sample(df.shape[0]*percentage//100)
+    df = sample(percentage)
 
     # Appliance
     dff = df[attr.get_appliance_attributes()]
@@ -151,8 +146,7 @@ def pca_electric_plot(percentage, dim):
 
 
 def pca_all_plot(percentage, dim):
-    df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
-    df = df.sample(df.shape[0]*percentage//100)
+    df = sample(percentage)
 
     # All
     dff = df[attr.all_attributes()]
