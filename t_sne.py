@@ -1,8 +1,8 @@
-from dataset.sampling import sample
-from dataset.attributes import Attributes
 from sklearn.manifold import TSNE
-import plotly.express as px
 
+from dataset.attributes import Attributes
+from dataset.sampling import sample
+from reduction_plot import DRType, dr_plot_2d, dr_plot_3d
 
 attr = Attributes()
 
@@ -18,42 +18,30 @@ def t_sne_weather_plot(percentage, dim, perplexity=30):
         tsne = TSNE(n_components=2, random_state=0, perplexity=perplexity)
         proj = tsne.fit_transform(dff)
 
-        fig = px.scatter(
+        return dr_plot_2d(
             df,
-            x=proj[:, 0],
-            y=proj[:, 1],
-            color=Attributes.temperature,
-            title=f"t-Distributed Stochastic Neighbor Embedding | Size {data_size} | Perplexity {perplexity}",
-            hover_data=attr.get_hover_data_for_weather()
-        )
-        fig.update_layout(
-            xaxis_title="Dimension 1",
-            yaxis_title="Dimension 2"
+            proj[:, 0],
+            proj[:, 1],
+            Attributes.temperature,
+            f"t-Distributed Stochastic Neighbor Embedding | Size {data_size} | Perplexity {perplexity}",
+            attr.get_hover_data_for_weather(),
+            DRType.TSNE
         )
 
     elif dim == '3D':
         tsne = TSNE(n_components=3, random_state=0, perplexity=perplexity)
         proj = tsne.fit_transform(dff)
 
-        fig = px.scatter_3d(
+        return dr_plot_3d(
             df,
-            x=proj[:, 0],
-            y=proj[:, 1],
-            z=proj[:, 2],
-            color=Attributes.temperature,
-            title=f"t-Distributed Stochastic Neighbor Embedding | Size {data_size} | Perplexity {perplexity}",
-            hover_data=attr.get_hover_data_for_weather()
+            proj[:, 0],
+            proj[:, 1],
+            proj[:, 2],
+            Attributes.temperature,
+            f"t-Distributed Stochastic Neighbor Embedding | Size {data_size} | Perplexity {perplexity}",
+            attr.get_hover_data_for_weather(),
+            DRType.TSNE
         )
-
-        fig.update_layout(
-            scene=dict(
-                xaxis_title="Dimension 1",
-                yaxis_title="Dimension 2",
-                zaxis_title="Dimension 3"
-            )
-        )
-
-    return fig
 
 
 def t_sne_electric_plot(percentage, dim, perplexity=30):
@@ -67,41 +55,30 @@ def t_sne_electric_plot(percentage, dim, perplexity=30):
         tsne = TSNE(n_components=2, random_state=0, perplexity=perplexity)
         proj = tsne.fit_transform(dff)
 
-        fig = px.scatter(
+        return dr_plot_2d(
             df,
-            x=proj[:, 0],
-            y=proj[:, 1],
-            color=Attributes.total_energy_consumption,
-            title=f"t-Distributed Stochastic Neighbor Embedding | Size {data_size} | Perplexity {perplexity}",
-            hover_data=attr.get_hover_data_for_electric()
-        )
-        fig.update_layout(
-            xaxis_title="Dimension 1",
-            yaxis_title="Dimension 2"
+            proj[:, 0],
+            proj[:, 1],
+            Attributes.total_energy_consumption,
+            f"t-Distributed Stochastic Neighbor Embedding | Size {data_size} | Perplexity {perplexity}",
+            attr.get_hover_data_for_electric(),
+            DRType.TSNE
         )
 
     if dim == '3D':
         tsne = TSNE(n_components=3, random_state=0, perplexity=perplexity)
         proj = tsne.fit_transform(dff)
 
-        fig = px.scatter_3d(
+        return dr_plot_3d(
             df,
-            x=proj[:, 0],
-            y=proj[:, 1],
-            z=proj[:, 2],
-            color=Attributes.total_energy_consumption,
-            title=f"t-Distributed Stochastic Neighbor Embedding | Size {data_size} | Perplexity {perplexity}",
-            hover_data=attr.get_hover_data_for_electric()
+            proj[:, 0],
+            proj[:, 1],
+            proj[:, 2],
+            Attributes.total_energy_consumption,
+            f"t-Distributed Stochastic Neighbor Embedding | Size {data_size} | Perplexity {perplexity}",
+            attr.get_hover_data_for_electric(),
+            DRType.TSNE
         )
-        fig.update_layout(
-            scene=dict(
-                xaxis_title="Dimension 1",
-                yaxis_title="Dimension 2",
-                zaxis_title="Dimension 3"
-            )
-        )
-
-    return fig
 
 
 def t_sne_all_plot(percentage, dim, perplexity=30):
@@ -115,38 +92,27 @@ def t_sne_all_plot(percentage, dim, perplexity=30):
         tsne = TSNE(n_components=3, random_state=0, perplexity=perplexity)
         proj = tsne.fit_transform(dff)
 
-        fig = px.scatter(
+        return dr_plot_2d(
             df,
-            x=proj[:, 0],
-            y=proj[:, 1],
-            color=Attributes.temperature,
-            title=f"t-Distributed Stochastic Neighbor Embedding | Size {data_size} | Perplexity {perplexity}",
-            hover_data=attr.get_hover_data_for_all()
-        )
-        fig.update_layout(
-            xaxis_title="Dimension 1",
-            yaxis_title="Dimension 2"
+            proj[:, 0],
+            proj[:, 1],
+            Attributes.temperature,
+            f"t-Distributed Stochastic Neighbor Embedding | Size {data_size} | Perplexity {perplexity}",
+            attr.get_hover_data_for_all(),
+            DRType.TSNE
         )
 
     if dim == '3D':
         tsne = TSNE(n_components=3, random_state=0, perplexity=perplexity)
         proj = tsne.fit_transform(dff)
 
-        fig = px.scatter_3d(
+        return dr_plot_3d(
             df,
-            x=proj[:, 0],
-            y=proj[:, 1],
-            z=proj[:, 2],
-            color=Attributes.total_energy_consumption,
-            title=f"t-Distributed Stochastic Neighbor Embedding | Size {data_size} | Perplexity {perplexity}",
-            hover_data=attr.get_hover_data_for_all()
+            proj[:, 0],
+            proj[:, 1],
+            proj[:, 2],
+            Attributes.total_energy_consumption,
+            f"t-Distributed Stochastic Neighbor Embedding | Size {data_size} | Perplexity {perplexity}",
+            attr.get_hover_data_for_all(),
+            DRType.TSNE
         )
-        fig.update_layout(
-            scene=dict(
-                xaxis_title="Dimension 1",
-                yaxis_title="Dimension 2",
-                zaxis_title="Dimension 3"
-            )
-        )
-
-    return fig
