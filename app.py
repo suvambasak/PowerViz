@@ -8,8 +8,9 @@ from bar import bar_plot
 from dataset.attributes import Attributes
 from pca import pca_all_plot, pca_electric_plot, pca_weather_plot
 from pie import pie_chart
-from reduction import t_sne_2d, t_sne_3d
+# from reduction import t_sne_2d, t_sne_3d
 from u_map import umap_all_plot, umap_electric_plot, umap_weather_plot
+from t_sne import t_sne_all_plot, t_sne_electric_plot, t_sne_weather_plot
 
 df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
 attr = Attributes()
@@ -230,18 +231,24 @@ def update_dimensionality_reduction(clicks, sample, plot_dim, plot_with, method)
             return pca_weather_plot(sample, plot_dim)
         elif method == 'UMAP':
             return umap_weather_plot(sample, plot_dim)
+        elif method == 't-SNE':
+            return t_sne_weather_plot(sample, plot_dim)
 
     if plot_with == 'Power usage':
         if method == 'PCA':
             return pca_electric_plot(sample, plot_dim)
         elif method == 'UMAP':
             return umap_electric_plot(sample, plot_dim)
+        elif method == 't-SNE':
+            return t_sne_electric_plot(sample, plot_dim)
 
     if plot_with == 'All':
         if method == 'PCA':
             return pca_all_plot(sample, plot_dim)
         elif method == 'UMAP':
             return umap_all_plot(sample, plot_dim)
+        elif method == 't-SNE':
+            return t_sne_electric_plot(sample, plot_dim)
 
 
 @app.callback(
