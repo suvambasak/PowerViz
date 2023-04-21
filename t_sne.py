@@ -7,7 +7,7 @@ import plotly.express as px
 attr = Attributes()
 
 
-def t_sne_weather_plot(percentage, dim):
+def t_sne_weather_plot(percentage, dim, perplexity=30):
     df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
     df = df.sample(df.shape[0]*percentage//100)
 
@@ -26,7 +26,7 @@ def t_sne_weather_plot(percentage, dim):
         ]
 
     if dim == '2D':
-        tsne = TSNE(n_components=2, random_state=0)
+        tsne = TSNE(n_components=2, random_state=0, perplexity=perplexity)
         proj = tsne.fit_transform(dff)
 
         fig = px.scatter(
@@ -43,7 +43,7 @@ def t_sne_weather_plot(percentage, dim):
         )
 
     elif dim == '3D':
-        tsne = TSNE(n_components=3, random_state=0)
+        tsne = TSNE(n_components=3, random_state=0, perplexity=perplexity)
         proj = tsne.fit_transform(dff)
 
         fig = px.scatter_3d(
@@ -67,7 +67,7 @@ def t_sne_weather_plot(percentage, dim):
     return fig
 
 
-def t_sne_electric_plot(percentage, dim):
+def t_sne_electric_plot(percentage, dim, perplexity=30):
     df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
     df = df.sample(df.shape[0]*percentage//100)
 
@@ -92,7 +92,7 @@ def t_sne_electric_plot(percentage, dim):
         ]
 
     if dim == '2D':
-        tsne = TSNE(n_components=2, random_state=0)
+        tsne = TSNE(n_components=2, random_state=0, perplexity=perplexity)
         proj = tsne.fit_transform(dff)
 
         fig = px.scatter(
@@ -109,7 +109,7 @@ def t_sne_electric_plot(percentage, dim):
         )
 
     if dim == '3D':
-        tsne = TSNE(n_components=3, random_state=0)
+        tsne = TSNE(n_components=3, random_state=0, perplexity=perplexity)
         proj = tsne.fit_transform(dff)
 
         fig = px.scatter_3d(
@@ -132,7 +132,7 @@ def t_sne_electric_plot(percentage, dim):
     return fig
 
 
-def t_sne_all_plot(percentage, dim):
+def t_sne_all_plot(percentage, dim, perplexity=30):
     df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
     df = df.sample(df.shape[0]*percentage//100)
 
@@ -150,7 +150,7 @@ def t_sne_all_plot(percentage, dim):
         ]
 
     if dim == '2D':
-        tsne = TSNE(n_components=3, random_state=0)
+        tsne = TSNE(n_components=3, random_state=0, perplexity=perplexity)
         proj = tsne.fit_transform(dff)
 
         fig = px.scatter(
@@ -167,7 +167,7 @@ def t_sne_all_plot(percentage, dim):
         )
 
     if dim == '3D':
-        tsne = TSNE(n_components=3, random_state=0)
+        tsne = TSNE(n_components=3, random_state=0, perplexity=perplexity)
         proj = tsne.fit_transform(dff)
 
         fig = px.scatter_3d(

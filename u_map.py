@@ -7,7 +7,7 @@ import plotly.express as px
 attr = Attributes()
 
 
-def umap_weather_plot(percentage, dim):
+def umap_weather_plot(percentage, dim, n_neighbors=15):
     df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
     df = df.sample(df.shape[0]*percentage//100)
 
@@ -26,7 +26,8 @@ def umap_weather_plot(percentage, dim):
         ]
 
     if dim == '2D':
-        umap = UMAP(n_components=2, init='random', random_state=0)
+        umap = UMAP(n_components=2, init='random',
+                    random_state=0, n_neighbors=n_neighbors)
         proj = umap.fit_transform(dff)
 
         fig = px.scatter(
@@ -43,7 +44,8 @@ def umap_weather_plot(percentage, dim):
         )
 
     elif dim == '3D':
-        umap = UMAP(n_components=3, init='random', random_state=0)
+        umap = UMAP(n_components=3, init='random',
+                    random_state=0, n_neighbors=n_neighbors)
         proj = umap.fit_transform(dff)
 
         fig = px.scatter_3d(
@@ -67,7 +69,7 @@ def umap_weather_plot(percentage, dim):
     return fig
 
 
-def umap_electric_plot(percentage, dim):
+def umap_electric_plot(percentage, dim, n_neighbors=15):
     df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
     df = df.sample(df.shape[0]*percentage//100)
 
@@ -92,7 +94,8 @@ def umap_electric_plot(percentage, dim):
         ]
 
     if dim == '2D':
-        umap = UMAP(n_components=2, init='random', random_state=0)
+        umap = UMAP(n_components=2, init='random',
+                    random_state=0, n_neighbors=n_neighbors)
         proj = umap.fit_transform(dff)
 
         fig = px.scatter(
@@ -109,7 +112,8 @@ def umap_electric_plot(percentage, dim):
         )
 
     if dim == '3D':
-        umap = UMAP(n_components=3, init='random', random_state=0)
+        umap = UMAP(n_components=3, init='random',
+                    random_state=0, n_neighbors=n_neighbors)
         proj = umap.fit_transform(dff)
 
         fig = px.scatter_3d(
@@ -132,7 +136,7 @@ def umap_electric_plot(percentage, dim):
     return fig
 
 
-def umap_all_plot(percentage, dim):
+def umap_all_plot(percentage, dim, n_neighbors=15):
     df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
     df = df.sample(df.shape[0]*percentage//100)
 
@@ -150,7 +154,8 @@ def umap_all_plot(percentage, dim):
         ]
 
     if dim == '2D':
-        umap = UMAP(n_components=2, init='random', random_state=0)
+        umap = UMAP(n_components=2, init='random',
+                    random_state=0, n_neighbors=n_neighbors)
         proj = umap.fit_transform(dff)
 
         fig = px.scatter(
@@ -167,7 +172,8 @@ def umap_all_plot(percentage, dim):
         )
 
     if dim == '3D':
-        umap = UMAP(n_components=3, init='random', random_state=0)
+        umap = UMAP(n_components=3, init='random',
+                    random_state=0, n_neighbors=n_neighbors)
         proj = umap.fit_transform(dff)
 
         fig = px.scatter_3d(
