@@ -1,7 +1,6 @@
 import dash_bootstrap_components as dbc
 import pandas as pd
 import plotly.express as px
-import plotly.graph_objects as go
 from dash import Dash, Input, Output, State, dcc, html
 
 from bar import bar_plot
@@ -11,6 +10,8 @@ from pie import pie_chart
 # from reduction import t_sne_2d, t_sne_3d
 from u_map import umap_all_plot, umap_electric_plot, umap_weather_plot
 from t_sne import t_sne_all_plot, t_sne_electric_plot, t_sne_weather_plot
+
+from dataset.sampling import sample_points
 
 df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
 attr = Attributes()
@@ -142,6 +143,13 @@ app.layout = html.Div([
                                value=30,
                                id='sample-slider'
                                ),
+                    html.Label('neighbour', id='neighbour-label'),
+                    dcc.Slider(min=0,
+                               max=100,
+                               step=5,
+                               value=0,
+                               id='neighbour-slider'
+                               ),
 
                 ], className='col-6'),
                 html.Div([
@@ -191,6 +199,29 @@ app.layout = html.Div([
 
 
 @app.callback(
+    Output(component_id='neighbour-label', component_property='children'),
+    Output(component_id='neighbour-slider', component_property='value'),
+    Output(component_id='neighbour-slider', component_property='max'),
+    Output(component_id='neighbour-slider', component_property='step'),
+    Input(component_id='dim-method', component_property='value'),
+    Input(component_id='sample-slider', component_property='value'),
+)
+def update_label(method, sample):
+    if sample <= 0:
+        sample = 1
+
+    current_sample_points = sample_points(sample)
+    step_size = current_sample_points//20
+
+    if method == 'PCA':
+        return [f'{method}: Disabled', 0, current_sample_points, step_size]
+    elif method == 'UMAP':
+        return [f'{method}: n Neighbors', 15, current_sample_points, step_size]
+    elif 't-SNE':
+        return [f'{method}: Perplexity', 30, current_sample_points, step_size]
+
+
+@app.callback(
     Output(component_id='pie-graph',
            component_property='figure'),
     Input(component_id='power-day', component_property='value'),
@@ -218,10 +249,11 @@ def update_bar_chart(day):
     State(component_id='tsne-plot', component_property='value'),
     State(component_id='tsne-plot-with', component_property='value'),
     State(component_id='dim-method', component_property='value'),
+    State(component_id='neighbour-slider', component_property='value'),
 )
-def update_dimensionality_reduction(clicks, sample, plot_dim, plot_with, method):
+def update_dimensionality_reduction(clicks, sample, plot_dim, plot_with, method, neighbour):
     print('update_dimensionality_reduction',
-          clicks, sample, plot_dim, plot_with, method)
+          clicks, sample, plot_dim, plot_with, method, neighbour)
 
     if sample <= 0:
         sample = 1
@@ -230,25 +262,25 @@ def update_dimensionality_reduction(clicks, sample, plot_dim, plot_with, method)
         if method == 'PCA':
             return pca_weather_plot(sample, plot_dim)
         elif method == 'UMAP':
-            return umap_weather_plot(sample, plot_dim)
+            return umap_weather_plot(sample, plot_dim, n_neighbors=neighbour)
         elif method == 't-SNE':
-            return t_sne_weather_plot(sample, plot_dim)
+            return t_sne_weather_plot(sample, plot_dim, perplexity=neighbour)
 
     if plot_with == 'Power usage':
         if method == 'PCA':
             return pca_electric_plot(sample, plot_dim)
         elif method == 'UMAP':
-            return umap_electric_plot(sample, plot_dim)
+            return umap_electric_plot(sample, plot_dim, n_neighbors=neighbour)
         elif method == 't-SNE':
-            return t_sne_electric_plot(sample, plot_dim)
+            return t_sne_electric_plot(sample, plot_dim, perplexity=neighbour)
 
     if plot_with == 'All':
         if method == 'PCA':
             return pca_all_plot(sample, plot_dim)
         elif method == 'UMAP':
-            return umap_all_plot(sample, plot_dim)
+            return umap_all_plot(sample, plot_dim, n_neighbors=neighbour)
         elif method == 't-SNE':
-            return t_sne_electric_plot(sample, plot_dim)
+            return t_sne_electric_plot(sample, plot_dim, perplexity=neighbour)
 
 
 @app.callback(
@@ -294,5 +326,5 @@ def parallel_correlation(start_day, end_day, selected_dimensions, selected_corre
 
 
 if __name__ == '__main__':
-    # app.run_server(debug=True)
-    app.run_server(host='0.0.0.0', debug=False)
+    app.run_server(debug=True)
+    # app.run_server(host='0.0.0.0', debug=False)
