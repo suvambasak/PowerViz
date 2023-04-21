@@ -19,17 +19,6 @@ def pca_weather_plot(percentage, dim):
     scaler.fit(dff)
     scaled_data = scaler.transform(dff)
 
-    def get_hover_data():
-        return [
-            Attributes.id,
-            Attributes.overall_weather_condition,
-            Attributes.summarise_weather,
-            Attributes.cloud_cover,
-            Attributes.humidity,
-            Attributes.visibility,
-            Attributes.pressure,
-        ]
-
     if dim == '2D':
         pca = PCA(n_components=2)
         pca.fit(scaled_data)
@@ -41,7 +30,7 @@ def pca_weather_plot(percentage, dim):
             y=x_pca[:, 1],
             color=Attributes.temperature,
             title=f"Principal Component Analysis | Size {data_size}",
-            hover_data=get_hover_data()
+            hover_data=attr.get_hover_data_for_weather()
         )
         fig.update_layout(
             xaxis_title="Principle component 1",
@@ -60,7 +49,7 @@ def pca_weather_plot(percentage, dim):
             z=x_pca[:, 2],
             color=Attributes.temperature,
             title=f"Principal Component Analysis | Size {data_size}",
-            hover_data=get_hover_data()
+            hover_data=attr.get_hover_data_for_weather()
         )
 
         fig.update_layout(
@@ -81,23 +70,6 @@ def pca_electric_plot(percentage, dim):
     dff = df[attr.get_appliance_attributes()]
     data_size = dff.shape[0]
 
-    def get_hover_data():
-        return [
-            Attributes.id,
-            Attributes.dishwasher,
-            Attributes.living_room,
-            Attributes.furnace_1,
-            Attributes.furnace_2,
-            Attributes.microwave,
-            Attributes.fridge,
-            Attributes.wine_cellar,
-            Attributes.well,
-            Attributes.kitchen_1,
-            Attributes.kitchen_2,
-            Attributes.kitchen_3,
-            Attributes.barn
-        ]
-
     scaler = StandardScaler()
     scaler.fit(dff)
     scaled_data = scaler.transform(dff)
@@ -113,7 +85,7 @@ def pca_electric_plot(percentage, dim):
             y=x_pca[:, 1],
             color=Attributes.total_energy_consumption,
             title=f"Principal Component Analysis | Size {data_size}",
-            hover_data=get_hover_data()
+            hover_data=attr.get_hover_data_for_electric()
         )
         fig.update_layout(
             xaxis_title="Principle component 1",
@@ -132,7 +104,7 @@ def pca_electric_plot(percentage, dim):
             z=x_pca[:, 2],
             color=Attributes.total_energy_consumption,
             title=f"Principal Component Analysis | Size {data_size}",
-            hover_data=get_hover_data()
+            hover_data=attr.get_hover_data_for_electric()
         )
         fig.update_layout(
             scene=dict(
@@ -156,16 +128,6 @@ def pca_all_plot(percentage, dim):
     scaler.fit(dff)
     scaled_data = scaler.transform(dff)
 
-    def get_hover_data():
-        return [
-            Attributes.id,
-            Attributes.total_energy_consumption,
-            Attributes.total_energy_generated,
-            Attributes.overall_house_energy_consumption,
-            Attributes.humidity,
-            Attributes.summarise_weather
-        ]
-
     if dim == '2D':
         pca = PCA(n_components=2)
         pca.fit(scaled_data)
@@ -177,7 +139,7 @@ def pca_all_plot(percentage, dim):
             y=x_pca[:, 1],
             color=Attributes.temperature,
             title=f"Principal Component Analysis | Size {data_size}",
-            hover_data=get_hover_data()
+            hover_data=attr.get_hover_data_for_all()
         )
         fig.update_layout(
             xaxis_title="Principle component 1",
@@ -196,7 +158,7 @@ def pca_all_plot(percentage, dim):
             z=x_pca[:, 2],
             color=Attributes.total_energy_consumption,
             title=f"Principal Component Analysis | Size {data_size}",
-            hover_data=get_hover_data()
+            hover_data=attr.get_hover_data_for_all()
         )
         fig.update_layout(
             scene=dict(

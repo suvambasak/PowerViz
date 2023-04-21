@@ -14,17 +14,6 @@ def umap_weather_plot(percentage, dim, n_neighbors=15):
     dff = df[attr.get_weather_attributes()]
     data_size = dff.shape[0]
 
-    def get_hover_data():
-        return [
-            Attributes.id,
-            Attributes.overall_weather_condition,
-            Attributes.summarise_weather,
-            Attributes.cloud_cover,
-            Attributes.humidity,
-            Attributes.visibility,
-            Attributes.pressure,
-        ]
-
     if dim == '2D':
         umap = UMAP(n_components=2, init='random',
                     random_state=0, n_neighbors=n_neighbors)
@@ -36,7 +25,7 @@ def umap_weather_plot(percentage, dim, n_neighbors=15):
             y=proj[:, 1],
             color=Attributes.temperature,
             title=f"Uniform Manifold Approximation and Projection | Size {data_size} | n_neighbors {n_neighbors}",
-            hover_data=get_hover_data()
+            hover_data=attr.get_hover_data_for_weather()
         )
         fig.update_layout(
             xaxis_title="Dimension 1",
@@ -55,7 +44,7 @@ def umap_weather_plot(percentage, dim, n_neighbors=15):
             z=proj[:, 2],
             color=Attributes.temperature,
             title=f"Uniform Manifold Approximation and Projection | Size {data_size} | n_neighbors {n_neighbors}",
-            hover_data=get_hover_data()
+            hover_data=attr.get_hover_data_for_weather()
         )
 
         fig.update_layout(
@@ -76,23 +65,6 @@ def umap_electric_plot(percentage, dim, n_neighbors=15):
     dff = df[attr.get_appliance_attributes()]
     data_size = dff.shape[0]
 
-    def get_hover_data():
-        return [
-            Attributes.id,
-            Attributes.dishwasher,
-            Attributes.living_room,
-            Attributes.furnace_1,
-            Attributes.furnace_2,
-            Attributes.microwave,
-            Attributes.fridge,
-            Attributes.wine_cellar,
-            Attributes.well,
-            Attributes.kitchen_1,
-            Attributes.kitchen_2,
-            Attributes.kitchen_3,
-            Attributes.barn
-        ]
-
     if dim == '2D':
         umap = UMAP(n_components=2, init='random',
                     random_state=0, n_neighbors=n_neighbors)
@@ -104,7 +76,7 @@ def umap_electric_plot(percentage, dim, n_neighbors=15):
             y=proj[:, 1],
             color=Attributes.total_energy_consumption,
             title=f"Uniform Manifold Approximation and Projection | Size {data_size} | n_neighbors {n_neighbors}",
-            hover_data=get_hover_data()
+            hover_data=attr.get_hover_data_for_electric()
         )
         fig.update_layout(
             xaxis_title="Dimension 1",
@@ -123,7 +95,7 @@ def umap_electric_plot(percentage, dim, n_neighbors=15):
             z=proj[:, 2],
             color=Attributes.total_energy_consumption,
             title=f"Uniform Manifold Approximation and Projection | Size {data_size} | n_neighbors {n_neighbors}",
-            hover_data=get_hover_data()
+            hover_data=attr.get_hover_data_for_electric()
         )
         fig.update_layout(
             scene=dict(
@@ -143,16 +115,6 @@ def umap_all_plot(percentage, dim, n_neighbors=15):
     dff = df[attr.all_attributes()]
     data_size = dff.shape[0]
 
-    def get_hover_data():
-        return [
-            Attributes.id,
-            Attributes.total_energy_consumption,
-            Attributes.total_energy_generated,
-            Attributes.overall_house_energy_consumption,
-            Attributes.humidity,
-            Attributes.summarise_weather
-        ]
-
     if dim == '2D':
         umap = UMAP(n_components=2, init='random',
                     random_state=0, n_neighbors=n_neighbors)
@@ -164,7 +126,7 @@ def umap_all_plot(percentage, dim, n_neighbors=15):
             y=proj[:, 1],
             color=Attributes.temperature,
             title=f"Uniform Manifold Approximation and Projection | Size {data_size} | n_neighbors {n_neighbors}",
-            hover_data=get_hover_data()
+            hover_data=attr.get_hover_data_for_all()
         )
         fig.update_layout(
             xaxis_title="Dimension 1",
@@ -183,7 +145,7 @@ def umap_all_plot(percentage, dim, n_neighbors=15):
             z=proj[:, 2],
             color=Attributes.total_energy_consumption,
             title=f"Uniform Manifold Approximation and Projection | Size {data_size} | n_neighbors {n_neighbors}",
-            hover_data=get_hover_data()
+            hover_data=attr.get_hover_data_for_all()
         )
         fig.update_layout(
             scene=dict(
