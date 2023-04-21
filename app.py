@@ -7,7 +7,6 @@ from bar import bar_plot
 from dataset.attributes import Attributes
 from pca import pca_all_plot, pca_electric_plot, pca_weather_plot
 from pie import pie_chart
-# from reduction import t_sne_2d, t_sne_3d
 from u_map import umap_all_plot, umap_electric_plot, umap_weather_plot
 from t_sne import t_sne_all_plot, t_sne_electric_plot, t_sne_weather_plot
 
@@ -138,7 +137,7 @@ app.layout = html.Div([
         html.Div([
             html.Div([
                 html.Div([
-                    html.Label('Sample'),
+                    html.Label('Sample (%)'),
                     dcc.Slider(0, 100, 5,
                                value=30,
                                id='sample-slider'
@@ -178,7 +177,7 @@ app.layout = html.Div([
                 ], className='col'),
 
                 html.Div([
-                    html.Label(''),
+                    html.Label(id='datasize-info'),
                     html.Button(id='t-sne-button', n_clicks=0,
                                 children='Reduce', className='btn btn-primary'),
                 ], className='col'),
@@ -199,6 +198,35 @@ app.layout = html.Div([
 
 
 @app.callback(
+    Output(component_id='datasize-info', component_property='children'),
+    Input(component_id='sample-slider', component_property='value'),
+    Input(component_id='neighbour-slider', component_property='value'),
+    State(component_id='dim-method', component_property='value'),
+)
+def show_datasize_info(sample, neighbour_size, method):
+    if sample <= 0:
+        sample = 1
+    current_sample_points = sample_points(sample)
+
+    if method == 'PCA':
+        return f'Sample: {current_sample_points}'
+
+    elif method == 'UMAP':
+        return f'Sample: {current_sample_points} Neighbors: {neighbour_size}'
+
+    elif 't-SNE':
+        return f'Sample: {current_sample_points} Perplexity: {neighbour_size}'
+
+
+@app.callback(
+    Output(component_id='t-sne-button', component_property='children'),
+    Input(component_id='dim-method', component_property='value'),
+)
+def update_text_on_method_change(method):
+    return f'Reduce with {method}'
+
+
+@app.callback(
     Output(component_id='neighbour-label', component_property='children'),
     Output(component_id='neighbour-slider', component_property='value'),
     Output(component_id='neighbour-slider', component_property='max'),
@@ -206,7 +234,7 @@ app.layout = html.Div([
     Input(component_id='dim-method', component_property='value'),
     Input(component_id='sample-slider', component_property='value'),
 )
-def update_label(method, sample):
+def update_neighbour_slider(method, sample):
     if sample <= 0:
         sample = 1
 
@@ -280,7 +308,7 @@ def update_dimensionality_reduction(clicks, sample, plot_dim, plot_with, method,
         elif method == 'UMAP':
             return umap_all_plot(sample, plot_dim, n_neighbors=neighbour)
         elif method == 't-SNE':
-            return t_sne_electric_plot(sample, plot_dim, perplexity=neighbour)
+            return t_sne_all_plot(sample, plot_dim, perplexity=neighbour)
 
 
 @app.callback(
