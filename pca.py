@@ -1,53 +1,37 @@
-import plotly.express as px
-import pandas as pd
-
-from sklearn.preprocessing import StandardScaler
-from dataset.attributes import Attributes
-
+from reduction_plot import dr_plot_2d, dr_plot_3d, DRType
 from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
 
+from dataset.attributes import Attributes
+from dataset.sampling import sample
 
 attr = Attributes()
 
 
 def pca_weather_plot(percentage, dim):
-
-    df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
-    df = df.sample(df.shape[0]*percentage//100)
+    df = sample(percentage)
 
     # Weather
     dff = df[attr.get_weather_attributes()]
+    data_size = dff.shape[0]
+
     scaler = StandardScaler()
     scaler.fit(dff)
     scaled_data = scaler.transform(dff)
-
-    def get_hover_data():
-        return [
-            Attributes.id,
-            Attributes.overall_weather_condition,
-            Attributes.summarise_weather,
-            Attributes.cloud_cover,
-            Attributes.humidity,
-            Attributes.visibility,
-            Attributes.pressure,
-        ]
 
     if dim == '2D':
         pca = PCA(n_components=2)
         pca.fit(scaled_data)
         x_pca = pca.transform(scaled_data)
 
-        fig = px.scatter(
+        return dr_plot_2d(
             df,
-            x=x_pca[:, 0],
-            y=x_pca[:, 1],
-            color=Attributes.temperature,
-            title="Principal Component Analysis",
-            hover_data=get_hover_data()
-        )
-        fig.update_layout(
-            xaxis_title="Principle component 1",
-            yaxis_title="Principle component 2"
+            x_pca[:, 0],
+            x_pca[:, 1],
+            Attributes.temperature,
+            f"Principal Component Analysis | Size {data_size}",
+            attr.get_hover_data_for_weather(),
+            DRType.PCA
         )
 
     elif dim == '3D':
@@ -55,50 +39,24 @@ def pca_weather_plot(percentage, dim):
         pca.fit(scaled_data)
         x_pca = pca.transform(scaled_data)
 
-        fig = px.scatter_3d(
+        return dr_plot_3d(
             df,
-            x=x_pca[:, 0],
-            y=x_pca[:, 1],
-            z=x_pca[:, 2],
-            color=Attributes.temperature,
-            title="Principal Component Analysis",
-            hover_data=get_hover_data()
+            x_pca[:, 0],
+            x_pca[:, 1],
+            x_pca[:, 2],
+            Attributes.temperature,
+            f"Principal Component Analysis | Size {data_size}",
+            attr.get_hover_data_for_weather(),
+            DRType.PCA
         )
-
-        fig.update_layout(
-            scene=dict(
-                xaxis_title="Principle component 1",
-                yaxis_title="Principle component 2",
-                zaxis_title="Principle component 3"
-            )
-        )
-
-    return fig
 
 
 def pca_electric_plot(percentage, dim):
-    df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
-    df = df.sample(df.shape[0]*percentage//100)
+    df = sample(percentage)
 
     # Appliance
     dff = df[attr.get_appliance_attributes()]
-
-    def get_hover_data():
-        return [
-            Attributes.id,
-            Attributes.dishwasher,
-            Attributes.living_room,
-            Attributes.furnace_1,
-            Attributes.furnace_2,
-            Attributes.microwave,
-            Attributes.fridge,
-            Attributes.wine_cellar,
-            Attributes.well,
-            Attributes.kitchen_1,
-            Attributes.kitchen_2,
-            Attributes.kitchen_3,
-            Attributes.barn
-        ]
+    data_size = dff.shape[0]
 
     scaler = StandardScaler()
     scaler.fit(dff)
@@ -109,17 +67,14 @@ def pca_electric_plot(percentage, dim):
         pca.fit(scaled_data)
         x_pca = pca.transform(scaled_data)
 
-        fig = px.scatter(
+        return dr_plot_2d(
             df,
-            x=x_pca[:, 0],
-            y=x_pca[:, 1],
-            color=Attributes.total_energy_consumption,
-            title="Principal Component Analysis",
-            hover_data=get_hover_data()
-        )
-        fig.update_layout(
-            xaxis_title="Principle component 1",
-            yaxis_title="Principle component 2"
+            x_pca[:, 0],
+            x_pca[:, 1],
+            Attributes.total_energy_consumption,
+            f"Principal Component Analysis | Size {data_size}",
+            attr.get_hover_data_for_electric(),
+            DRType.PCA
         )
 
     elif dim == '3D':
@@ -127,62 +82,42 @@ def pca_electric_plot(percentage, dim):
         pca.fit(scaled_data)
         x_pca = pca.transform(scaled_data)
 
-        fig = px.scatter_3d(
+        return dr_plot_3d(
             df,
-            x=x_pca[:, 0],
-            y=x_pca[:, 1],
-            z=x_pca[:, 2],
-            color=Attributes.total_energy_consumption,
-            title="Principal Component Analysis",
-            hover_data=get_hover_data()
+            x_pca[:, 0],
+            x_pca[:, 1],
+            x_pca[:, 2],
+            Attributes.total_energy_consumption,
+            f"Principal Component Analysis | Size {data_size}",
+            attr.get_hover_data_for_electric(),
+            DRType.PCA
         )
-        fig.update_layout(
-            scene=dict(
-                xaxis_title="Principle component 1",
-                yaxis_title="Principle component 2",
-                zaxis_title="Principle component 3"
-            )
-        )
-
-    return fig
 
 
 def pca_all_plot(percentage, dim):
-    df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
-    df = df.sample(df.shape[0]*percentage//100)
+    df = sample(percentage)
 
     # All
     dff = df[attr.all_attributes()]
+    data_size = dff.shape[0]
+
     scaler = StandardScaler()
     scaler.fit(dff)
     scaled_data = scaler.transform(dff)
-
-    def get_hover_data():
-        return [
-            Attributes.id,
-            Attributes.total_energy_consumption,
-            Attributes.total_energy_generated,
-            Attributes.overall_house_energy_consumption,
-            Attributes.humidity,
-            Attributes.summarise_weather
-        ]
 
     if dim == '2D':
         pca = PCA(n_components=2)
         pca.fit(scaled_data)
         x_pca = pca.transform(scaled_data)
 
-        fig = px.scatter(
+        return dr_plot_2d(
             df,
-            x=x_pca[:, 0],
-            y=x_pca[:, 1],
-            color=Attributes.temperature,
-            title="Principal Component Analysis",
-            hover_data=get_hover_data()
-        )
-        fig.update_layout(
-            xaxis_title="Principle component 1",
-            yaxis_title="Principle component 2"
+            x_pca[:, 0],
+            x_pca[:, 1],
+            Attributes.temperature,
+            f"Principal Component Analysis | Size {data_size}",
+            attr.get_hover_data_for_all(),
+            DRType.PCA
         )
 
     elif dim == '3D':
@@ -190,21 +125,13 @@ def pca_all_plot(percentage, dim):
         pca.fit(scaled_data)
         x_pca = pca.transform(scaled_data)
 
-        fig = px.scatter_3d(
+        return dr_plot_3d(
             df,
-            x=x_pca[:, 0],
-            y=x_pca[:, 1],
-            z=x_pca[:, 2],
-            color=Attributes.total_energy_consumption,
-            title="Principal Component Analysis",
-            hover_data=get_hover_data()
+            x_pca[:, 0],
+            x_pca[:, 1],
+            x_pca[:, 2],
+            Attributes.total_energy_consumption,
+            f"Principal Component Analysis | Size {data_size}",
+            attr.get_hover_data_for_all(),
+            DRType.PCA
         )
-        fig.update_layout(
-            scene=dict(
-                xaxis_title="Principle component 1",
-                yaxis_title="Principle component 2",
-                zaxis_title="Principle component 3"
-            )
-        )
-
-    return fig

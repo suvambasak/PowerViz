@@ -35,6 +35,44 @@ class Attributes:
     dew_point = 'dewPoint'
     precipitation_probability = 'precipProbability'
 
+    def get_hover_data_for_weather(self):
+        return [
+            Attributes.id,
+            Attributes.overall_weather_condition,
+            Attributes.summarise_weather,
+            Attributes.cloud_cover,
+            Attributes.humidity,
+            Attributes.visibility,
+            Attributes.pressure,
+        ]
+
+    def get_hover_data_for_electric(self):
+        return [
+            Attributes.id,
+            Attributes.dishwasher,
+            Attributes.living_room,
+            Attributes.furnace_1,
+            Attributes.furnace_2,
+            Attributes.microwave,
+            Attributes.fridge,
+            Attributes.wine_cellar,
+            Attributes.well,
+            Attributes.kitchen_1,
+            Attributes.kitchen_2,
+            Attributes.kitchen_3,
+            Attributes.barn
+        ]
+
+    def get_hover_data_for_all(self):
+        return [
+            Attributes.id,
+            Attributes.total_energy_consumption,
+            Attributes.total_energy_generated,
+            Attributes.overall_house_energy_consumption,
+            Attributes.humidity,
+            Attributes.summarise_weather
+        ]
+
     def build_labels(self):
         return {
             Attributes.day: 'day',
