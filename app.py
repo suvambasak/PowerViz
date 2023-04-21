@@ -3,11 +3,13 @@ import pandas as pd
 import plotly.express as px
 from dash import Dash, Input, Output, State, dcc, html
 
+import assets.pstyle as pstyle
 from bar import bar_plot
 from dataset.attributes import Attributes
 from dataset.sampling import sample_points
 from pca import pca_all_plot, pca_electric_plot, pca_weather_plot
 from pie import pie_chart
+from reduction_plot import DRType
 from t_sne import t_sne_all_plot, t_sne_electric_plot, t_sne_weather_plot
 from u_map import umap_all_plot, umap_electric_plot, umap_weather_plot
 
@@ -23,7 +25,9 @@ app.layout = html.Div([
     html.Div(
         [
             html.H1('PowerViz')
-        ], className='text-center', style={'backgroundColor': 'black', 'color': 'white', 'padding': '7px', 'width': '100%', 'margin': '0'}
+        ],
+        className='text-center',
+        style=pstyle.heading_title()
     ),
     html.Br(),
 
@@ -34,7 +38,10 @@ app.layout = html.Div([
             rel='stylesheet',
             href='/assets/style.css'
         ),
-        html.H4('Dataset Overview', className='text-center'),
+        html.H4(
+            'Dataset Overview',
+            className='text-center'
+        ),
 
         # Inputs
         html.Div([
@@ -46,7 +53,10 @@ app.layout = html.Div([
                     '1',
                     id='start-day'
                 ),
-            ], style={'width': '48%', 'display': 'inline-block'}, className='form-group'),
+            ],
+                style=pstyle.content_left(),
+                className='form-group'
+            ),
 
             # End Day
             html.Div([
@@ -56,16 +66,22 @@ app.layout = html.Div([
                     '1',
                     id='end-day'
                 ),
-            ], style={'width': '48%', 'float': 'right', 'display': 'inline-block'}, className='form-group'),
+            ],
+                style=pstyle.content_right(),
+                className='form-group'
+            ),
 
             # Dimention
             html.Div([
                 html.Label('Select dimensions'),
-                dcc.Dropdown(attr.get_numeric_attributes(),
-                             [Attributes.day, Attributes.hour],
-                             multi=True,
-                             id='overview-dimension-list'),
-            ], className='form-group'),
+                dcc.Dropdown(
+                    attr.get_numeric_attributes(),
+                    [Attributes.day, Attributes.hour],
+                    multi=True,
+                    id='overview-dimension-list'),
+            ],
+                className='form-group'
+            ),
 
             html.Hr(),
 
@@ -76,26 +92,39 @@ app.layout = html.Div([
                     id='correlation-dimension',
                     options=attr.get_numeric_attributes()
                 ),
-            ], className='form-group'),
+            ],
+                className='form-group'
+            ),
             html.Hr(),
         ]
         ),
 
         html.Div([
-            html.H6(['Parallel coordinates view'], className='text-center'),
+            html.H6(
+                'Parallel coordinates view',
+                className='text-center'
+            ),
             dcc.Graph(id='overview-parallel-coordinates'),
             html.Hr(),
-            html.H6(['Correlation 2D view'], className='text-center'),
+            html.H6(
+                'Correlation 2D view',
+                className='text-center'
+            ),
             dcc.Graph(id='overview-correlation-coordinates'),
         ]),
 
-    ], className='container'),
+    ],
+        className='container'
+    ),
 
     html.Hr(),
     # Bar and Pie side by side
 
     html.Div([
-        html.H4('Power and usage', className='text-center'),
+        html.H4(
+            'Power and usage',
+            className='text-center'
+        ),
         html.Br(),
 
         html.Div([
@@ -109,55 +138,80 @@ app.layout = html.Div([
                 ),
                 html.Hr(),
                 dcc.Graph(id='bar-graph'),
-            ], style={'width': '48%', 'display': 'inline-block'}),
+            ],
+                style=pstyle.content_left()
+            ),
 
             # Home appliances
             html.Div([
                 html.Label('Select appliances'),
-                dcc.Dropdown(attr.get_appliance_attributes(),
-                             [Attributes.home_office, Attributes.living_room],
-                             multi=True,
-                             id='appliances-pie-list'),
+                dcc.Dropdown(
+                    attr.get_appliance_attributes(),
+                    [Attributes.home_office, Attributes.living_room],
+                    multi=True,
+                    id='appliances-pie-list'
+                ),
 
                 html.Hr(),
                 dcc.Graph(id='pie-graph'),
-            ], style={'width': '48%', 'float': 'right', 'display': 'inline-block'}),
-        ], className='container'),
+            ],
+                style=pstyle.content_right()),
+        ],
+            className='container'
+        ),
 
 
-    ], className='container'),
+    ],
+        className='container'
+    ),
 
     html.Hr(),
 
     # t-SNE
     html.Div([
-        html.H4('Dimensionality reduction', className='text-center'),
+        html.H4(
+            'Dimensionality reduction',
+            className='text-center'
+        ),
         html.Br(),
         html.Div([
             html.Div([
                 html.Div([
                     html.Label('Sample (%)'),
-                    dcc.Slider(0, 100, 5,
-                               value=30,
-                               id='sample-slider'
-                               ),
-                    html.Label('neighbour', id='neighbour-label'),
-                    dcc.Slider(min=0,
-                               max=100,
-                               step=5,
-                               value=0,
-                               id='neighbour-slider'
-                               ),
+                    dcc.Slider(
+                        0,
+                        100,
+                        5,
+                        value=30,
+                        id='sample-slider'
+                    ),
+                    html.Label(
+                        'neighbour',
+                        id='neighbour-label'
+                    ),
+                    dcc.Slider(
+                        min=0,
+                        max=100,
+                        step=5,
+                        value=0,
+                        id='neighbour-slider'
+                    ),
 
-                ], className='col-6'),
+                ],
+                    className='col-6'
+                ),
+
                 html.Div([
                     html.Label('Method'),
                     dcc.RadioItems(
-                        ['PCA', 'UMAP', 't-SNE'],
-                        'PCA',
+                        [DRType.PCA, DRType.UMAP, DRType.TSNE],
+                        DRType.PCA,
                         id='dim-method',
                     ),
-                ], className='col'),
+                ],
+                    className='col'
+                ),
+
                 html.Div([
                     html.Label('Plot type'),
                     dcc.RadioItems(
@@ -165,7 +219,10 @@ app.layout = html.Div([
                         '2D',
                         id='tsne-plot',
                     ),
-                ], className='col'),
+                ],
+                    className='col'
+                ),
+
                 html.Div([
                     html.Label('Plot with'),
                     dcc.RadioItems(
@@ -173,21 +230,37 @@ app.layout = html.Div([
                         'Weather',
                         id='tsne-plot-with',
                     ),
-                ], className='col'),
+
+                ],
+                    className='col'
+                ),
 
                 html.Div([
                     html.Label(id='datasize-info'),
-                    html.Button(id='t-sne-button', n_clicks=0,
-                                children='Reduce', className='btn btn-primary'),
-                ], className='col'),
+                    html.Button(
+                        id='t-sne-button',
+                        n_clicks=0,
+                        children='Reduce',
+                        className='btn btn-primary'
+                    ),
+                ],
+                    className='col'
+                ),
 
 
-            ], className='row')
+            ],
+                className='row'
+            )
 
-        ], className='container'),
+        ],
+            className='container'
+        ),
         html.Hr(),
 
-        dcc.Graph(id='t-sne', style={'height': '800px'}),
+        dcc.Graph(
+            id='t-sne',
+            style=pstyle.dim_reduce()
+        ),
     ]),
 
 
@@ -207,13 +280,13 @@ def show_datasize_info(sample, neighbour_size, method):
         sample = 1
     current_sample_points = sample_points(sample)
 
-    if method == 'PCA':
+    if method == DRType.PCA:
         return f'Sample: {current_sample_points}'
 
-    elif method == 'UMAP':
+    elif method == DRType.UMAP:
         return f'Sample: {current_sample_points} Neighbors: {neighbour_size}'
 
-    elif 't-SNE':
+    elif method == DRType.TSNE:
         return f'Sample: {current_sample_points} Perplexity: {neighbour_size}'
 
 
@@ -240,11 +313,11 @@ def update_neighbour_slider(method, sample):
     current_sample_points = sample_points(sample)
     step_size = current_sample_points//20
 
-    if method == 'PCA':
+    if method == DRType.PCA:
         return [f'{method}: Disabled', 0, current_sample_points, step_size]
-    elif method == 'UMAP':
+    elif method == DRType.UMAP:
         return [f'{method}: n Neighbors', 15, current_sample_points, step_size]
-    elif 't-SNE':
+    elif method == DRType.TSNE:
         return [f'{method}: Perplexity', 30, current_sample_points, step_size]
 
 
@@ -264,7 +337,6 @@ def update_pie_chart(day, appliances):
     Input(component_id='power-day', component_property='value'),
 )
 def update_bar_chart(day):
-    print('DAY:', day)
     return bar_plot(day)
 
 
@@ -286,27 +358,27 @@ def update_dimensionality_reduction(clicks, sample, plot_dim, plot_with, method,
         sample = 1
 
     if plot_with == 'Weather':
-        if method == 'PCA':
+        if method == DRType.PCA:
             return pca_weather_plot(sample, plot_dim)
-        elif method == 'UMAP':
+        elif method == DRType.UMAP:
             return umap_weather_plot(sample, plot_dim, n_neighbors=neighbour)
-        elif method == 't-SNE':
+        elif method == DRType.TSNE:
             return t_sne_weather_plot(sample, plot_dim, perplexity=neighbour)
 
     if plot_with == 'Power usage':
-        if method == 'PCA':
+        if method == DRType.PCA:
             return pca_electric_plot(sample, plot_dim)
-        elif method == 'UMAP':
+        elif method == DRType.UMAP:
             return umap_electric_plot(sample, plot_dim, n_neighbors=neighbour)
-        elif method == 't-SNE':
+        elif method == DRType.TSNE:
             return t_sne_electric_plot(sample, plot_dim, perplexity=neighbour)
 
     if plot_with == 'All':
-        if method == 'PCA':
+        if method == DRType.PCA:
             return pca_all_plot(sample, plot_dim)
-        elif method == 'UMAP':
+        elif method == DRType.UMAP:
             return umap_all_plot(sample, plot_dim, n_neighbors=neighbour)
-        elif method == 't-SNE':
+        elif method == DRType.TSNE:
             return t_sne_all_plot(sample, plot_dim, perplexity=neighbour)
 
 
@@ -326,6 +398,7 @@ def parallel_correlation(start_day, end_day, selected_dimensions, selected_corre
              (df['day'] <= int(end_day))]
     dff = dff.drop(['icon', 'summary', 'cloudCover'], axis=1)
 
+    # Order correlation
     if selected_correlation:
         corr = dff.corrwith(dff[selected_correlation])
         sorted_cols = corr.abs().sort_values(ascending=False).index
@@ -346,12 +419,15 @@ def parallel_correlation(start_day, end_day, selected_dimensions, selected_corre
         color_continuous_midpoint=2
     )
 
+    # 2D correlation
     correlation_grid_fig = px.imshow(
-        dff[ordered_dimentions].corr(), text_auto=True)
+        dff[ordered_dimentions].corr(),
+        text_auto=True
+    )
 
     return [parallel_coordinates_fig, correlation_grid_fig]
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
-    # app.run_server(host='0.0.0.0', debug=False)
+    # app.run_server(debug=True)
+    app.run_server(host='0.0.0.0', debug=False)
