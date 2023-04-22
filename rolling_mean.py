@@ -1,11 +1,7 @@
-from dataset.attributes import Attributes
-# import pandas as pd
 import plotly.graph_objects as go
 
 
 def plot_rolling_average(df, window_size, column_name):
-    # df = pd.read_csv("dataset/HomeDHM.csv", low_memory=False)
-    # print(df[column_name])
 
     # Group the data by day and get the sum of the column specified by the user
     df_grouped = df.groupby('day').agg({column_name: 'sum'})
@@ -35,6 +31,7 @@ def plot_rolling_average(df, window_size, column_name):
             name=f'Actual {column_name}'
         )
     )
+
     fig.update_layout(
         title="Prediction from past three days",
         xaxis_title='Day',
@@ -42,7 +39,3 @@ def plot_rolling_average(df, window_size, column_name):
     )
 
     return fig
-    # fig.show()
-
-
-# plot_rolling_average(3, Attributes.solar_power_generation)
