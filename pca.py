@@ -1,9 +1,9 @@
-from reduction_plot import dr_plot_2d, dr_plot_3d, DRType
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 
 from dataset.attributes import Attributes
 from dataset.sampling import sample
+from reduction_plot import DRType, dr_plot_2d, dr_plot_3d
 
 attr = Attributes()
 

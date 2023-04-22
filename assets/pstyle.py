@@ -1,5 +1,3 @@
-
-
 def heading_title():
     return {
         'backgroundColor': 'black',

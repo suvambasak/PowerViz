@@ -131,3 +131,4 @@ dmypy.json
 
 # exclude csv files
 *.csv
+.DS_Store

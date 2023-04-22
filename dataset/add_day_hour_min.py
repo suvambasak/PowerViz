@@ -1,5 +1,6 @@
-import pandas as pd
 import sys
+
+import pandas as pd
 
 df = pd.read_csv('HomeC.csv', low_memory=False)
 
