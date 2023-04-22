@@ -12,6 +12,7 @@ from pie import pie_chart
 from reduction_plot import DRType
 from t_sne import t_sne_all_plot, t_sne_electric_plot, t_sne_weather_plot
 from u_map import umap_all_plot, umap_electric_plot, umap_weather_plot
+from rolling_mean import plot_rolling_average
 
 df = pd.read_csv('dataset/HomeDHM.csv', low_memory=False)
 attr = Attributes()
@@ -76,7 +77,11 @@ app.layout = html.Div([
                 html.Label('Select dimensions'),
                 dcc.Dropdown(
                     attr.get_numeric_attributes(),
-                    [Attributes.day, Attributes.hour],
+                    [
+                        Attributes.day,
+                        Attributes.hour,
+                        Attributes.temperature
+                    ],
                     multi=True,
                     id='overview-dimension-list'),
             ],
@@ -160,6 +165,30 @@ app.layout = html.Div([
             className='container'
         ),
 
+    ],
+        className='container'
+    ),
+
+    html.Hr(),
+
+    # Rolling mean
+    html.Div([
+        html.H4(
+            'Estimation using rolling mean',
+            className='text-center'
+        ),
+        html.Div([
+            html.Label('Feature'),
+            dcc.Dropdown(
+                id='rolling-feature',
+                value=Attributes.total_energy_consumption,
+                options=attr.get_rolling_attributes(),
+            ),
+        ],
+            className='form-group'
+        ),
+        html.Hr(),
+        dcc.Graph(id='rolling-graph'),
 
     ],
         className='container'
@@ -247,7 +276,6 @@ app.layout = html.Div([
                     className='col'
                 ),
 
-
             ],
                 className='row'
             )
@@ -267,6 +295,14 @@ app.layout = html.Div([
     html.Hr(),
 
 ])
+
+
+@app.callback(
+    Output(component_id='rolling-graph', component_property='figure'),
+    Input(component_id='rolling-feature', component_property='value'),
+)
+def show_rolling_mean(feature):
+    return plot_rolling_average(df, 3, feature)
 
 
 @app.callback(
@@ -394,6 +430,9 @@ def update_dimensionality_reduction(clicks, sample, plot_dim, plot_with, method,
 )
 def parallel_correlation(start_day, end_day, selected_dimensions, selected_correlation):
 
+    if int(start_day) > int(end_day):
+        end_day = start_day
+
     dff = df[(df['day'] >= int(start_day)) &
              (df['day'] <= int(end_day))]
     dff = dff.drop(['icon', 'summary', 'cloudCover'], axis=1)
@@ -429,5 +468,5 @@ def parallel_correlation(start_day, end_day, selected_dimensions, selected_corre
 
 
 if __name__ == '__main__':
-    # app.run_server(debug=True)
-    app.run_server(host='0.0.0.0', debug=False)
+    app.run_server(debug=True)
+    # app.run_server(host='0.0.0.0', debug=False)
