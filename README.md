@@ -1,6 +1,6 @@
 # PowerViz
 Energy Consumption Visualization Framework for Smart Home. Build with 
-- [Plotly dash](https://dash.plotly.com/)
+- [Plotly Dash](https://dash.plotly.com/)
 - [Smart Home Dataset with weather Information](https://www.kaggle.com/datasets/taranvee/smart-home-dataset-with-weather-information?select=HomeC.csv)
 
 # Table of Contents
@@ -16,7 +16,7 @@ Energy Consumption Visualization Framework for Smart Home. Build with
 - [Contributors](#contributors)
 - [Documents](/docs/)
     - [Project proposal](/docs/PDF/ProjectProposal.pdf)
-    - [Report]()
+    - [Report](/docs/PDF/Group-11.pdf)
 
 ## How to start the application
 1. Clone the repo:
